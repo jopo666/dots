@@ -1,0 +1,26 @@
+export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
+
+# Exports
+export TERMINAL="alacritty"
+export EDITOR="nvim"
+export DOTFILES="$HOME/dots"
+
+# Aliases
+alias v="nvim"
+alias l="eza--color -lh --group-directories-first"
+alias ls="eza --color --group-directories-first"
+alias ll="eza --color -lah --group-directories-first"
+alias lt="eza -T --git"
+alias lta="eza -Ta --git"
+alias ltd="eza -TD --git"
+alias lg="lazygit"
+alias update="sudo nixos-rebuild switch";
+
+# Plugins
+source $DOTFILES/dotfiles/antigen.zsh
+antigen bundle fzf
+antigen bundle ssh-agent
+antigen apply
+
+# Enable starship
+eval "$(starship init zsh)"

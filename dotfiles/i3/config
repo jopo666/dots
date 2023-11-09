@@ -1,0 +1,203 @@
+### VARIABLES ###
+set $alt mod1
+set $super mod4
+set $open $HOME/.config/i3/open-if-not-running
+set $ws_files files
+set $ws_web web
+set $ws_term term
+set $ws_code code
+set $ws_docker docker
+set $ws_mail mail
+set $ws_slack slack
+
+### STARTUP ###
+exec_always --no-startup-id $HOME/.config/i3/autolayout autolayout &
+exec --no-startup-id unclutter -idle 1 &
+
+### GENERAL ###
+floating_modifier $alt
+focus_follows_mouse no
+font pango:BigBlueTermPlus Nerd Font 9
+new_window pixel 2
+smart_borders on
+workspace_auto_back_and_forth yes
+
+### KEYBINDS ###
+bindsym $alt+q kill
+bindsym $alt+w workspace $ws_web; exec $open -w $ws_web -p instance -v chromium -c chromium
+bindsym $alt+e workspace $ws_term; exec $open -w $ws_term -p instance -v alacritty -c alacritty
+# r
+bindsym $alt+t floating toggle
+bindsym $alt+y workspace $ws_code; exec $open -w $ws_code -p instance -v codium -c codium
+bindsym $alt+u resize shrink width 5 px or 5 ppt
+bindsym $alt+i resize grow width 5 px or 5 ppt
+bindsym $alt+o exec "dmenu_run -b -nf '#555555' -nb '#000000' -sb '#000000' -sf '#EEEEEE' -fn 'IBM Plex Mono-9' -p '>>'"
+bindsym $alt+p [class="files"] scratchpad show; move position center;
+bindsym $alt+s workspace $ws_slack; exec $open -w $ws_slack -p instance -v slack -c slack
+bindsym $alt+d workspace $ws_docker; exec $open -w $ws_docker -p instance -v slack -c alacritty --class "docker" -e lazydocker
+# d
+bindsym $alt+f fullscreen
+# g
+bindsym $alt+h focus left
+bindsym $alt+j focus down
+bindsym $alt+k focus up
+bindsym $alt+l focus right
+# z
+bindsym $alt+c [class="python"] scratchpad show; move position center;
+# x
+# c
+# v
+# b
+# n
+bindsym $alt+m workspace $ws_mail; exec $open -w $ws_mail -p name -v Inbox -c chromium-browser https://mail.google.com/mail/u/1/#inbox --new-window
+# Shift
+bindsym $alt+Shift+w [class="wifi"] scratchpad show; move position center
+bindsym $alt+Shift+r restart
+bindsym $alt+Shift+s [class="audio"] scratchpad show; move position center;
+bindsym $alt+Ctrl+h move left
+bindsym $alt+Ctrl+j move down
+bindsym $alt+Ctrl+k move up
+bindsym $alt+Ctrl+l move right
+bindsym $alt+1 workspace number 1
+bindsym $alt+2 workspace number 2
+bindsym $alt+3 workspace number 3
+bindsym $alt+4 workspace number 4
+bindsym $alt+5 workspace number 5
+bindsym $alt+6 workspace number 6
+bindsym $alt+7 workspace number 7
+bindsym $alt+8 workspace number 8
+bindsym $alt+9 workspace number 9
+bindsym $alt+Shift+1 move container to workspace number 1
+bindsym $alt+Shift+2 move container to workspace number 2
+bindsym $alt+Shift+3 move container to workspace number 3
+bindsym $alt+Shift+4 move container to workspace number 4
+bindsym $alt+Shift+5 move container to workspace number 5
+bindsym $alt+Shift+6 move container to workspace number 6
+bindsym $alt+Shift+7 move container to workspace number 7
+bindsym $alt+Shift+8 move container to workspace number 8
+bindsym $alt+Shift+9 move container to workspace number 9
+# xf86
+bindsym XF86MonBrightnessUp exec brightnessctl s 20%+
+bindsym XF86MonBrightnessDown exec brightnessctl s 20%-
+bindsym XF86AudioRaiseVolume exec --no-startup-id pulsemixer --change-volume +25
+bindsym XF86AudioLowerVolume exec --no-startup-id pulsemixer --change-volume -25
+bindsym XF86AudioMute exec --no-startup-id pulsemixer --toggle-mute
+# special
+bindsym $alt+BackSpace mode "$powermenu"
+bindsym $alt+Return exec alacritty
+bindsym $super+Return exec chromium
+# cut/copy/paste with super
+bindsym --release $super+c exec --no-startup-id xdotool key --clearmodifiers Ctrl+Insert
+bindsym --release $super+x exec --no-startup-id xdotool key --clearmodifiers Shift+Delete
+bindsym --release $super+v exec --no-startup-id xdotool key --clearmodifiers Shift+Insert
+
+### ASSIGNMENTS ###
+assign [class="chromium"] $ws_web
+assign [class="alacritty"] $ws_term
+assign [class="slack"] $ws_slack
+assign [class="codium"] $ws_code
+assign [class="docker"] $ws_docker
+assign [class="mail"] $ws_mail
+
+### SCRATCHPADS ###
+exec_always $open -p class -v wifi -c alacritty --class "wifi" -e nmtui
+for_window [class="wifi"] floating enable
+for_window [class="wifi"] move scratchpad
+exec_always $open -p class -v audio -c alacritty --class "audio" -e pulsemixer
+for_window [class="audio"] floating enable
+for_window [class="audio"] resize set 600 300
+for_window [class="audio"] move scratchpad
+exec_always $open -p class -v python -c alacritty --class "python" -e python3
+for_window [class="python"] floating enable
+for_window [class="python"] move scratchpad
+exec_always $open -p class -v files -c alacritty --class "files" -e lf
+for_window [class="files"] floating enable
+for_window [class="files"] move scratchpad
+
+### MODES ###
+set $screenlock i3lock -c 282828 -u
+set $powermenu SYSTEM >> (L)OCK (H)IBERNATE (R)EBOOT (S)HUTDOWN
+mode "$powermenu" {
+    bindsym e exec --no-startup-id i3-msg exit, mode "default"
+    bindsym l exec --no-startup-id $screenlock, mode "default"
+    bindsym h exec --no-startup-id $screenlock && systemctl hibernate, mode "default"
+    bindsym r exec --no-startup-id systemctl reboot, mode "default"
+    bindsym s exec --no-startup-id systemctl poweroff -i, mode "default"
+    bindsym Return mode "default"
+    bindsym BackSpace mode "default"
+    bindsym Escape mode "default"
+}
+
+# start application
+# exec --no-startup-id nm-applet
+# exec --no-startup-id feh --bg-fill ~/.i3/wallpaper
+# exec --no-startup-id dunst
+# exec --no-startup-id ibus-daemon --xim -d -r
+# exec --no-startup-id setxkbmap -layout us -option ctrl:nocaps
+
+# clipboard manager
+# exec --no-startup-id ~/.i3/bin/clipmenud
+# bindsym $alt+Insert exec CM_OUTPUT_CLIP=1 ~/.i3/bin/clipmenu
+
+# lock screen
+# bindsym --release XF86ScreenSaver exec ~/.i3/bin/i3lock.sh
+# bindsym --release $alt+Delete exec ~/.i3/bin/i3lock.sh
+# bindsym --release $alt+Mod1+l exec ~/.i3/bin/i3lock.sh
+# bindsym --release control+Mod1+Delete exec ~/.i3/bin/i3lock.sh
+
+# Screenshot
+# bindsym Print exec scrot -e 'mv $f /tmp/'
+# bindsym $alt+Print exec gnome-screenshot -i -a
+
+# Toggle fastly terminal
+# bindsym $alt+Escape exec ~/.i3/bin/fn esc
+# bindcode $alt+49 exec ~/.i3/bin/fn 0
+# bindsym $alt+F12 exec ~/.i3/bin/fn 12
+
+# Assign workspaces
+# assign [class="keepassxc"] 0
+
+## shortcut
+# emacs
+# bindsym $alt+Mod1+i exec emacs
+# keepassx
+# bindsym $alt+Mod1+k exec keepassxc
+# email
+# bindsym $alt+Mod1+e exec thunderbird
+# browser
+# bindsym $alt+Mod1+n exec nyxt
+# bindsym $alt+Mod1+b exec firefox -P default
+# bindsym $alt+Mod1+Shift+b exec firefox -P default --private-window
+# bindsym $alt+Mod1+g exec chromium --temp-profile
+# bindsym $alt+Mod1+Shift+g exec chromium --temp-profile --incognito
+# gimp
+# bindsym $alt+Mod1+p exec gimp
+# wicd
+# bindsym $alt+Mod1+w exec wicd-client -n
+# explore
+
+### COLORS ###
+# class                 border  bground text    indicator child_border
+client.focused          #000000 #000000 #FFFFFF #FFFF00   #FFFF00
+client.focused_inactive #000000 #000000 #FFFFFF #000000   #000000
+client.unfocused        #000000 #000000 #FFFFFF #000000   #000000
+client.urgent           #000000 #000000 #FFFFFF #000000   #000000
+client.placeholder      #000000 #000000 #FFFFFF #000000   #000000
+client.background       #FFFFFF
+
+bar {
+  status_command i3status
+  mode dock
+  hidden_state hide
+  modifier $alt
+  colors {
+    background #000000
+    statusline #FFFFFF
+    separator  #333333
+    focused_workspace  #FFFFFF #000000 #FFFFFF
+    active_workspace   #000000 #000000 #FFFFFF
+    inactive_workspace #000000 #000000 #FFFFFF
+    urgent_workspace   #000000 #000000 #FFFFFF
+    binding_mode       #000000 #000000 #FF0000
+  }
+}

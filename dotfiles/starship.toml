@@ -1,0 +1,41 @@
+format = " $directory "
+right_format = '''
+$git_branch
+$git_commit
+$git_state
+$git_status
+$python
+'''
+add_newline = false
+
+[directory]
+format = '[$path](bright-white)'
+truncation_length = 3
+truncate_to_repo = false
+
+[git_branch]
+format = '$branch'
+style = 'bold bright-white'
+truncation_length = 20
+
+[git_status]
+format = ' \[$staged$conflicted$modified$deleted$renamed$untracked$ahead_behind\]'
+conflicted = '!'
+modified = 'x'
+untracked = '?'
+renamed = 'r'
+deleted = 'd'
+staged = '+'
+ahead = ' ⇡${count}'
+diverged = ' ⇕⇡${ahead_count}⇣${behind_count}'
+behind = ' ⇣${count}'
+up_to_date = ' ok'
+
+[git_commit]
+style = "bright-white"
+
+[git_state]
+style = "bright-white"
+
+[python]
+format = ' \[$virtualenv\]'

@@ -1,0 +1,38 @@
+general {
+  output_format = "none"
+  separator = "  "
+  interval = 1
+}
+ 
+order += "volume master"
+order += "wireless wlp4s0"
+order += "battery 1"
+order += "tztime local"
+order += "time"
+
+
+volume master {
+  format = "sound"
+  format_muted = "mute"
+  device = "pulse"
+}
+
+wireless wlp4s0 {
+  format_up = "wifi"
+  format_down = "no wifi"
+}
+
+battery 1 { 
+  format = "%percentage"
+  integer_battery_capacity = true
+  format_down = "no battery"
+  path = "/sys/class/power_supply/BAT%d/uevent"
+} 
+
+tztime local {
+  format = "%D"
+}
+
+time {
+  format = "%H:%M "
+}

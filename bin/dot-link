@@ -1,0 +1,50 @@
+#!/bin/sh
+
+set -uo pipefail
+
+USAGE="Usage: $0 [-u] <link-file>"
+UNLINK=false; INPUT_FILE="";
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    -u) UNLINK=true; shift 1; ;;
+    -h|--help) echo $USAGE; exit 1; ;;
+    -*|--*) echo $USAGE; echo "Unknown option $1."; exit 1; ;;
+    *) INPUT_FILE=$1; shift 1; ;;
+  esac
+done
+
+if [ -z "$INPUT_FILE" ]; then
+  echo $USAGE; exit 1;
+fi
+
+link() {
+  local src=$1; local dst=$2;
+  if [ -L "$dst" ]; then
+    echo "Existing link ($src -> $dst)."
+  elif [ -e "$dst" ]; then
+    echo "Existing file ($dst)."
+  else
+    ln -vs $src $dst
+  fi
+}
+
+unlink() {
+  local src=$1; local dst=$2;
+  if [ -L "$dst" ]; then
+    rm -v $dst
+  elif [ -e "$dst" ]; then
+    echo "Existing file ($dst)."
+  else
+    echo "No existing link ($src -> $dst)."
+  fi
+}
+
+while IFS= read -r line; do
+  src=$(echo "$line" | awk '{print $1}' | sed "s|^~|$HOME|")
+  dst=$(echo "$line" | awk '{print $3}' | sed "s|^~|$HOME|")
+  if [ "$UNLINK" = true ]; then
+    unlink $src $dst
+  else
+    link $src $dst
+  fi
+done < "$INPUT_FILE"

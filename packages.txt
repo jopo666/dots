@@ -1,0 +1,51 @@
+# Apps
+alacritty
+chromium
+
+# Command line tools
+bat
+docker
+eza
+fd
+fzf
+git
+glow
+htop
+jq
+lazydocker
+lazygit
+lf
+neovim
+pass
+ripgrep
+rm-improved
+slides
+starship
+tmux
+xcape
+xclip
+
+# Compression
+tar
+unzip
+zip
+
+# Languages
+gcc
+python312
+rustup
+
+# System
+bash
+brightnessctl
+dmenu
+dunst
+i3
+pulsemixer
+unclutter
+xdotool
+wget
+
+# Work stuff
+#slack
+#vscodium

@@ -1,0 +1,94 @@
+set shell sh
+set shellopts '-eu'
+set ifs "\n"
+
+#### General options
+set preview
+set ignorecase
+set icons
+set scrolloff 10
+
+#### Mappings
+# general
+map . set hidden!
+map <esc> unselect; clear
+map <space> :toggle; down
+map ? $lf -doc | $PAGER; clear
+map e $$EDITOR $fx
+map c cut
+# custom
+map f fuzzy_select
+map <c-r> batch_rename
+map E extract
+# navigation
+map g
+map g/ cd /
+map gf cd ~/flakies
+map gd cd ~/Downloads
+map g. cd ~/.config
+# create
+map a
+map af push %touch<space>
+map ad push %mkdir<space>
+# execute
+map x
+map xx $$f
+map x! !$f
+map xa % chmod +x $f 
+# delete
+map d
+map df delete
+map dd trash
+map du trash-undo
+map de trash-empty
+
+#### Commands
+cmd fuzzy_select $lf -remote "send $id select \"$(fzf --layout reverse)\""
+# delete/trash
+cmd trash $rip $f
+cmd trash-undo $rip --unbury
+cmd trash-empty $rip --decompose
+cmd delete ${{
+    set -f
+    printf "$fx\n"
+    printf "delete the above files? [y/n] >> "
+    read ans
+    [ "$ans" = "y" ] && rm -rf $fx
+}}
+# rename
+cmd batch_rename !{{
+  contentsfile=$(mktemp)
+  trap 'rm $contentsfile' INT TERM EXIT
+  dircontents="$(command ls -1p)"
+  printf "%s" "$dircontents" | nl -n ln > "$contentsfile";
+  $EDITOR "$contentsfile"
+  printf "%s" "$dircontents" | paste -d '\t' "$contentsfile" - \
+  | while read -r line; do
+    orig="$(printf "%s" "$line" | cut -f3 | sed 's!/$!!')"
+    new="$(printf "%s" "$line" | cut -f2 | sed 's!/$!!')"
+    if [ "$new" != "$orig" ]; then
+      if [ -e "$new" ]; then
+        printf "%s already exists, not overwriting.\n" "$new"
+      else
+        printf "./%s -> ./%s\n" "$orig" "$new"
+        command mv -i ./"$orig" ./"$new"
+      fi
+    fi
+  done
+  rm "$contentsfile"
+  trap - INT TERM EXIT
+}}
+# extract
+cmd extract ${{
+    set -f
+    case $f in
+        *.tar.bz|*.tar.bz2|*.tbz|*.tbz2) tar xjvf $f;;
+        *.tar.gz|*.tgz) tar xzvf $f;;
+        *.tar.xz|*.txz) tar xJvf $f;;
+        *.zip) unzip $f;;
+        *.rar) unrar x $f;;
+        *.7z) 7z x $f;;
+        *.jar) jar -xvf $f;;
+    esac
+}}
+

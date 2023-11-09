@@ -1,0 +1,21 @@
+[user]
+  name = jopo
+  email = jopo@birdlover.com
+  username = jopo66
+[init]
+  defaultBranch = dev
+[core]
+  editor = nvim
+  whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
+[alias]
+  a = add
+  b = branch
+  c = commit
+  d = diff
+  f = fetch
+  l = log --oneline --graph --decorate
+  o = checkout
+  ps = push
+  pl = pull
+  r = rebase --interactive
+  s = status

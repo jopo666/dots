@@ -1,0 +1,29 @@
+#!/bin/sh
+
+set -euo pipefail
+
+USAGE="Usage: $0 [package]"
+PACKAGE=""
+if [ $# -ge 2 ]; then
+  echo $USAGE; exit 1;
+elif [ $# -eq 1 ]; then
+  PACKAGE=$1
+fi
+
+# Get already installed packages and their indices.
+INSTALLED=$(nix profile list | while IFS= read -r line; do
+  index=$(echo "$line" | awk '{print $1}')
+  name=$(echo "$line" | awk '{print $2}' | cut -d. -f3-)
+  echo "$index $name"
+done)
+
+# Select packages and remove em'.
+if [ -z "$PACKAGE" ]; then
+  REMOVED=$(echo "$INSTALLED" | fzf --multi --height=40%)
+else
+  REMOVED="$(echo "$INSTALLED" | grep $PACKAGE)"
+fi
+echo "$REMOVED" | while read -r line; do
+  index=$(echo "$line" | awk '{print $1}')
+  nix profile remove "$index"
+done

@@ -1,0 +1,51 @@
+#!/bin/sh
+
+PROPERTY=""
+VALUE=""
+WORKSPACE=""
+# Parse arguments
+while :; do
+    case $1 in
+        -p)
+          PROPERTY=$2; shift 2
+          ;;
+        -v)
+          VALUE=$2; shift 2
+          ;;
+        -w)
+          WORKSPACE=$2; shift 2
+          ;;
+        -c)
+          shift
+          COMMAND=$@; break
+          ;;
+        *)
+          break
+    esac
+done
+
+echo $WORKSPACE $PROPERTY $VALUE $COMMAND
+
+# Check if instance exists.
+if [ -z "$WORKSPACE" ]; then
+  if i3-msg -t get_tree |
+    jq -e --arg NAME "$WORKSPACE" --arg PROPERTY "$PROPERTY" --arg VALUE "$VALUE" '
+      .. | select(.[$PROPERTY]? // "" | test($VALUE; "i"))
+    ' >/dev/null; then
+    echo "Not running command"
+  else
+    $@
+  fi
+else
+  if i3-msg -t get_tree |
+    jq -e --arg NAME "$WORKSPACE" --arg PROPERTY "$PROPERTY" --arg VALUE "$VALUE" '
+      .. | select(.name? == $NAME) |
+      .. | select(.[$PROPERTY]? // "" | test($VALUE; "i"))
+    ' >/dev/null; then
+    echo "Not running command"
+  else
+    $@
+  fi
+fi
+
+
