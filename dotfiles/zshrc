@@ -1,12 +1,26 @@
+# TMUX
+if command -v tmux &> /dev/null && [ -z "$TMUX" ]; then
+    tmux attach || tmux new -s scratch
+fi
+
+# PATH
 export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
 
-# Exports
+# EXPORTS
 export TERMINAL="alacritty"
 export EDITOR="nvim"
 export DOTFILES="$HOME/dots"
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_CACHE_HOME="$HOME/.cache"
 
-# Aliases
+# ALIASES
 alias v="nvim"
+alias vi="nvim"
+alias vim="nvim"
+alias lg="lazygit"
+alias cat="bat --plain"
+alias update="sudo nixos-rebuild switch";
 alias ls="LC_COLLATE=C ls --color --group-directories-first"
 alias lsa="LC_COLLATE=C ls -a --color --group-directories-first"
 alias l="LC_COLLATE=C ls --color -lh --group-directories-first"
@@ -21,15 +35,48 @@ alias lta3="tree -C -a -L 3 --gitignore"
 alias ltd="tree -C -d --gitignore"
 alias ltd2="tree -C -d -L 2 --gitignore"
 alias ltd3="tree -C -d -L 3 --gitignore"
-alias cat="bat --plain"
-alias lg="lazygit"
-alias update="sudo nixos-rebuild switch";
+alias ga='git add'
+alias gb='git branch '
+alias gc='git commit -m'
+alias gca='git commit -am'
+alias gco='git checkout '
+alias gd='git diff'
+alias gl='git log --graph --oneline --decorate'
+alias gpl='git pull'
+alias gps='git push'
+alias gs='git status'
+alias d='dirs -v'
+for index ({1..9}) alias "$index"="cd +${index}"; unset index
 
-# Plugins
+# ZSH OPTIONS
+setopt AUTO_CD
+setopt AUTO_PUSHD
+setopt PUSHD_IGNORE_DUPS
+setopt PUSHD_SILENT
+setopt CORRECT_ALL
+export SAVEHIST=10000
+export HISTSIZE=10000
+export HISTFILE="$XDG_CACHE_HOME/.zsh_history"
+setopt APPEND_HISTORY
+setopt HIST_IGNORE_DUPS
+setopt HIST_REDUCE_BLANKS
+setopt INC_APPEND_HISTORY
+setopt SHARE_HISTORY
+
+# COMPLETIONS
+autoload -U compinit; compinit
+zstyle ':completion:*' menu select
+zmodload zsh/complist
+bindkey -M menuselect 'h' vi-backward-char
+bindkey -M menuselect 'k' vi-up-line-or-history
+bindkey -M menuselect 'l' vi-forward-char
+bindkey -M menuselect 'j' vi-down-line-or-history
+
+# PLUGINS
 source $DOTFILES/dotfiles/antigen.zsh
 antigen bundle fzf
 antigen bundle ssh-agent
 antigen apply
 
-# Enable starship
+# PROMPT
 eval "$(starship init zsh)"
