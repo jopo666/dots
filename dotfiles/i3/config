@@ -31,7 +31,7 @@ bindsym $alt+t floating toggle
 bindsym $alt+y workspace $ws_code; exec $open -w $ws_code -p instance -v codium -c codium
 bindsym $alt+u resize shrink width 5 px or 5 ppt
 bindsym $alt+i resize grow width 5 px or 5 ppt
-bindsym $alt+o exec "dmenu_run -b -nf '#555555' -nb '#000000' -sb '#000000' -sf '#EEEEEE' -fn 'IBM Plex Mono-9' -p '>>'"
+bindsym $alt+o exec "dmenu_run -b -nf '#555555' -nb '#000000' -sb '#000000' -sf '#EEEEEE' -fn 'BigBlueTermPlus Nerd Font-10'  -p '>>'"
 bindsym $alt+p [class="files"] scratchpad show; move position center;
 bindsym $alt+s workspace $ws_slack; exec $open -w $ws_slack -p instance -v slack -c slack
 bindsym $alt+d workspace $ws_docker; exec $open -w $ws_docker -p instance -v slack -c alacritty --class "docker" -e lazydocker
