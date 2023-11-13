@@ -21,6 +21,7 @@ alias lta3="tree -C -a -L 3 --gitignore"
 alias ltd="tree -C -d --gitignore"
 alias ltd2="tree -C -d -L 2 --gitignore"
 alias ltd3="tree -C -d -L 3 --gitignore"
+alias cat="bat --plain"
 alias lg="lazygit"
 alias update="sudo nixos-rebuild switch";
 
