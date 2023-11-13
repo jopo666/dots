@@ -18,9 +18,9 @@ exec --no-startup-id unclutter -idle 1 &
 floating_modifier $alt
 focus_follows_mouse no
 font pango:BigBlueTermPlus Nerd Font 9
-new_window pixel 2
+new_window pixel 4
 smart_borders on
-workspace_auto_back_and_forth yes
+workspace_auto_back_and_forth no
 
 ### KEYBINDS ###
 bindsym $alt+q kill
@@ -31,7 +31,7 @@ bindsym $alt+t floating toggle
 bindsym $alt+y workspace $ws_code; exec $open -w $ws_code -p instance -v codium -c codium
 bindsym $alt+u resize shrink width 5 px or 5 ppt
 bindsym $alt+i resize grow width 5 px or 5 ppt
-bindsym $alt+o exec "dmenu_run -b -nf '#555555' -nb '#000000' -sb '#000000' -sf '#EEEEEE' -fn 'BigBlueTermPlus Nerd Font-10'  -p '>>'"
+bindsym $alt+o exec "dmenu_run -b -nf '#999999' -nb '#000000' -sb '#000000' -sf '#EEEEEE' -fn 'BigBlueTermPlus Nerd Font-9'  -p '>>'"
 bindsym $alt+p [class="files"] scratchpad show; move position center;
 bindsym $alt+s workspace $ws_slack; exec $open -w $ws_slack -p instance -v slack -c slack
 bindsym $alt+d workspace $ws_docker; exec $open -w $ws_docker -p instance -v slack -c alacritty --class "docker" -e lazydocker
@@ -43,10 +43,9 @@ bindsym $alt+j focus down
 bindsym $alt+k focus up
 bindsym $alt+l focus right
 # z
-bindsym $alt+c [class="python"] scratchpad show; move position center;
-# x
-# c
-# v
+bindsym --release $alt+c exec --no-startup-id xdotool key --clearmodifiers Ctrl+Insert
+bindsym --release $alt+x exec --no-startup-id xdotool key --clearmodifiers Shift+Delete
+bindsym --release $alt+v exec --no-startup-id xdotool key --clearmodifiers Shift+Insert
 # b
 # n
 bindsym $alt+m workspace $ws_mail; exec $open -w $ws_mail -p name -v Inbox -c chromium-browser https://mail.google.com/mail/u/1/#inbox --new-window
@@ -54,6 +53,7 @@ bindsym $alt+m workspace $ws_mail; exec $open -w $ws_mail -p name -v Inbox -c ch
 bindsym $alt+Shift+w [class="wifi"] scratchpad show; move position center
 bindsym $alt+Shift+r restart
 bindsym $alt+Shift+s [class="audio"] scratchpad show; move position center;
+bindsym $alt+shift+c [class="python"] scratchpad show; move position center;
 bindsym $alt+Ctrl+h move left
 bindsym $alt+Ctrl+j move down
 bindsym $alt+Ctrl+k move up
@@ -87,9 +87,6 @@ bindsym $alt+BackSpace mode "$powermenu"
 bindsym $alt+Return exec alacritty
 bindsym $super+Return exec chromium
 # cut/copy/paste with super
-bindsym --release $super+c exec --no-startup-id xdotool key --clearmodifiers Ctrl+Insert
-bindsym --release $super+x exec --no-startup-id xdotool key --clearmodifiers Shift+Delete
-bindsym --release $super+v exec --no-startup-id xdotool key --clearmodifiers Shift+Insert
 
 ### ASSIGNMENTS ###
 assign [class="chromium"] $ws_web
@@ -100,13 +97,6 @@ assign [class="docker"] $ws_docker
 assign [class="mail"] $ws_mail
 
 ### SCRATCHPADS ###
-exec_always $open -p class -v wifi -c alacritty --class "wifi" -e nmtui
-for_window [class="wifi"] floating enable
-for_window [class="wifi"] move scratchpad
-exec_always $open -p class -v audio -c alacritty --class "audio" -e pulsemixer
-for_window [class="audio"] floating enable
-for_window [class="audio"] resize set 600 300
-for_window [class="audio"] move scratchpad
 exec_always $open -p class -v python -c alacritty --class "python" -e python3
 for_window [class="python"] floating enable
 for_window [class="python"] move scratchpad
@@ -178,7 +168,7 @@ mode "$powermenu" {
 
 ### COLORS ###
 # class                 border  bground text    indicator child_border
-client.focused          #000000 #000000 #FFFFFF #FFFF00   #FFFF00
+client.focused          #000000 #000000 #FFFFFF #FFFFFF   #FFFFFF
 client.focused_inactive #000000 #000000 #FFFFFF #000000   #000000
 client.unfocused        #000000 #000000 #FFFFFF #000000   #000000
 client.urgent           #000000 #000000 #FFFFFF #000000   #000000
@@ -187,7 +177,7 @@ client.background       #FFFFFF
 
 bar {
   status_command i3status
-  mode dock
+  mode hide
   hidden_state hide
   modifier $alt
   colors {
