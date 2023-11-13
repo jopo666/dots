@@ -26,9 +26,9 @@ untracked = '?'
 renamed = 'r'
 deleted = 'd'
 staged = '+'
-ahead = ' ⇡${count}'
-diverged = ' ⇕⇡${ahead_count}⇣${behind_count}'
-behind = ' ⇣${count}'
+ahead = '⇡${count}'
+diverged = '⇡${ahead_count}⇣${behind_count}'
+behind = '⇣${count}'
 up_to_date = ' ok'
 
 [git_commit]
