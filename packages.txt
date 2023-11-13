@@ -5,7 +5,6 @@ chromium
 # Command line tools
 bat
 docker
-eza
 fd
 fzf
 git
@@ -22,6 +21,7 @@ rm-improved
 slides
 starship
 tmux
+tree
 xcape
 xclip
 
