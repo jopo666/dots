@@ -14,3 +14,7 @@ bell:
 selection:
   semantic_escape_chars: ",│`|:\"' ()[]{}<>\t"
   save_to_clipboard: true
+colors:
+  primary:
+    background: "#000000"
+    foreground: "#FFFFFF"
