@@ -1,6 +1,6 @@
 # Apps
 alacritty
-chromium
+firefox
 
 # Command line tools
 bat
