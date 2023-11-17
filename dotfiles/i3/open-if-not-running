@@ -1,51 +1,45 @@
 #!/bin/sh
 
-PROPERTY=""
-VALUE=""
-WORKSPACE=""
-# Parse arguments
-while :; do
-    case $1 in
-        -p)
-          PROPERTY=$2; shift 2
-          ;;
-        -v)
-          VALUE=$2; shift 2
-          ;;
-        -w)
-          WORKSPACE=$2; shift 2
-          ;;
-        -c)
-          shift
-          COMMAND=$@; break
-          ;;
-        *)
-          break
-    esac
+set -uo pipefail
+
+USAGE="Usage: $0 [-w workspace] [-v value=\$workspace] [-s session=none] [-k key=class] <command>"
+
+WORKSPACE=""; VALUE=""; COMMAND=""; KEY="class"; TERM=false; SESSION="";
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    -w) WORKSPACE="$2"; shift 2; ;;
+    -k) KEY="$2"; shift 2; ;;
+    -v) VALUE="$2"; shift 2; ;;
+    -s) SESSION="$2"; shift 2; ;;
+    -t) TERM="$1"; shift 1; ;;
+    -h|--help) echo $USAGE; exit 1; ;;
+    -*|--*) echo $USAGE; echo "Unknown option $1."; exit 1; ;;
+    *) COMMAND=$@; break ;;
+  esac
 done
-
-echo $WORKSPACE $PROPERTY $VALUE $COMMAND
-
-# Check if instance exists.
-if [ -z "$WORKSPACE" ]; then
-  if i3-msg -t get_tree |
-    jq -e --arg NAME "$WORKSPACE" --arg PROPERTY "$PROPERTY" --arg VALUE "$VALUE" '
-      .. | select(.[$PROPERTY]? // "" | test($VALUE; "i"))
-    ' >/dev/null; then
-    echo "Not running command"
-  else
-    $@
-  fi
-else
-  if i3-msg -t get_tree |
-    jq -e --arg NAME "$WORKSPACE" --arg PROPERTY "$PROPERTY" --arg VALUE "$VALUE" '
-      .. | select(.name? == $NAME) |
-      .. | select(.[$PROPERTY]? // "" | test($VALUE; "i"))
-    ' >/dev/null; then
-    echo "Not running command"
-  else
-    $@
-  fi
+if [ -z "$VALUE" ]; then
+  VALUE=$WORKSPACE
 fi
 
+# Run command only if instance does not exist.
+if i3-msg -t get_tree |
+  jq -e --arg WORKSPACE "$WORKSPACE" --arg KEY "$KEY" --arg VALUE "$VALUE" '
+    .. | select(.name? == $WORKSPACE) |
+    .. | select(.[$KEY]? // "" | test($VALUE; "i"))
+  ' >/dev/null; then
+  echo "Found instance running in workspace '$WORKSPACE'."
+else
+  if [ ! -z "$SESSION" ]; then
+    if tmux new -d -s $SESSION; then
+      if [ ! -z "$COMMAND" ]; then
+        tmux send-keys -t $SESSION "$COMMAND" ENTER
+      fi
+    fi
+    alacritty --class $VALUE -e tmux attach -t $SESSION
+  elif [ $TERM ]; then
+    alacritty --class $VALUE -e $COMMAND
+  else
+    $COMMAND
+  fi
+fi
 
