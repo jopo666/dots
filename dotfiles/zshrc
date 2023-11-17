@@ -61,6 +61,16 @@ setopt HIST_REDUCE_BLANKS
 setopt INC_APPEND_HISTORY
 setopt SHARE_HISTORY
 
+# KEYBINDS
+set KEYTIMEOUT=1
+bindkey -s "^k" "kill **\t" # fzf: kill process
+bindkey -s "^f" "^t"        # fzf: find file
+bindkey -s "^d" "^[c"       # fzf: cd to dir
+bindkey ";5C" forward-word
+bindkey "5C" forward-word
+bindkey ";5D" backward-word
+bindkey "5D" backward-word
+
 # COMPLETIONS
 autoload -U compinit; compinit
 zstyle ':completion:*' menu select
@@ -72,7 +82,6 @@ bindkey -M menuselect 'j' vi-down-line-or-history
 
 # TMUX
 tmux new -d -s scratch 2> /dev/null
-
 
 # PLUGINS
 source $DOTFILES/dotfiles/antigen.zsh
