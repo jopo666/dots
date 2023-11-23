@@ -2,7 +2,7 @@
 export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
 
 # EXPORTS
-export TERMINAL="alacritty"
+export TERM="xterm-256color"
 export EDITOR="nvim"
 export DOTFILES="$HOME/dots"
 export XDG_CONFIG_HOME="$HOME/.config"
@@ -51,7 +51,7 @@ setopt AUTO_CD
 setopt AUTO_PUSHD
 setopt PUSHD_IGNORE_DUPS
 setopt PUSHD_SILENT
-setopt CORRECT_ALL
+setopt CORRECT
 export SAVEHIST=10000
 export HISTSIZE=10000
 export HISTFILE="$XDG_CACHE_HOME/.zsh_history"
