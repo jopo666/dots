@@ -1,12 +1,12 @@
 ### APPS ###
-alacritty
-firefox
+# Uncomment only on NixOs, OpenGL does not work on other distros.
+# alacritty
+# firefox
 
 ### CLI ###
 bat
 fd
 fzf
-git
 glow
 htop
 jq
@@ -20,7 +20,6 @@ ripgrep
 rm-improved
 slides
 starship
-tar
 tmux
 tree
 unzip
@@ -29,12 +28,12 @@ xclip
 zip
 
 ### LANGUAGES ###
+cmake
 gcc
 python312
 rustup
 
 ### SYSTEM ###
-bash
 brightnessctl
 dmenu
 dunst
@@ -44,11 +43,9 @@ wget
 xdotool
 
 ### OS ###
+#bash
+#git
 #i3
 #zsh
+#docker
 
-### WORK ###
-# chromium
-# docker
-# slack
-# vscodium
