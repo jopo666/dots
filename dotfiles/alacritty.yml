@@ -8,7 +8,7 @@ font:
   normal:
     family: BigBlueTermPlus Nerd Font
     style: Regular
-  size: 8
+  size: 10
 bell:
   duration: 0
 selection:
