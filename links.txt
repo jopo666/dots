@@ -5,6 +5,7 @@
 ~/dots/dotfiles/i3status => ~/.config/i3status
 ~/dots/dotfiles/lf => ~/.config/lf
 ~/dots/dotfiles/nix => ~/.config/nix
+~/dots/dotfiles/nixpkgs => ~/.config/nixpkgs
 ~/dots/dotfiles/nvim => ~/.config/nvim
 ~/dots/dotfiles/ssh_config => ~/.ssh/config
 ~/dots/dotfiles/starship.toml => ~/.config/starship.toml
