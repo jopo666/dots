@@ -2,7 +2,6 @@
 export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
 
 # EXPORTS
-export TERM="xterm-256color"
 export EDITOR="nvim"
 export DOTFILES="$HOME/dots"
 export XDG_CONFIG_HOME="$HOME/.config"
