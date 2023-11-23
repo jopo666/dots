@@ -1,8 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 
 set -uo pipefail
 
-USAGE="Usage: $0 [-w workspace] [-v value=\$workspace] [-s session=none] [-k key=class] <command>"
+USAGE="Usage: $0 [-w workspace] [-v value=\$workspace] [-s session=none] [-k key=class] [-t] <command>"
 
 WORKSPACE=""; VALUE=""; COMMAND=""; KEY="class"; TERM=false; SESSION="";
 while [[ $# -gt 0 ]]; do

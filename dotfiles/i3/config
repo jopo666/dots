@@ -7,20 +7,21 @@ set $open exec $HOME/.config/i3/open-if-not-running
 exec_always --no-startup-id $HOME/.config/i3/autolayout autolayout &
 exec --no-startup-id unclutter -idle 1 &
 exec --no-startup-id dunst
+exec --no-startup-id chromium
 
 ### GENERAL ###
 floating_modifier $alt
 focus_follows_mouse no
-font pango:BigBlueTermPlus Nerd Font 10
+font pango:BigBlueTermPlus Nerd Font 12
 new_window pixel 6
 smart_borders on
 workspace_auto_back_and_forth no
 
 ### KEYBINDS ###
-bindsym $alt+Return exec $tmux scratch
+bindsym $alt+Return exec alacritty
 bindsym $super+Return exec chromium
 bindsym $alt+q kill
-bindsym $alt+w workspace web; $open -w web -v chromium chromium
+bindsym $alt+w workspace web;
 bindsym $alt+e workspace tty; $open -w tty -s scratch
 bindsym $alt+r restart
 bindsym $alt+t fullscreen toggle
