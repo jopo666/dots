@@ -1,10 +1,9 @@
-# Apps
+### APPS ###
 alacritty
 firefox
 
-# Command line tools
+### CLI ###
 bat
-docker
 fd
 fzf
 git
@@ -16,37 +15,40 @@ lazygit
 lf
 neovim
 pass
+pulsemixer
 ripgrep
 rm-improved
-pulsemixer
 slides
 starship
+tar
 tmux
 tree
+unzip
 xcape
 xclip
-
-# Compression
-tar
-unzip
 zip
 
-# Languages
+### LANGUAGES ###
 gcc
 python312
 rustup
 
-# System
+### SYSTEM ###
 bash
 brightnessctl
 dmenu
 dunst
-i3
 pulsemixer
 unclutter
-xdotool
 wget
+xdotool
 
-# Work stuff
-#slack
-#vscodium
+### OS ###
+#i3
+#zsh
+
+### WORK ###
+# chromium
+# docker
+# slack
+# vscodium
