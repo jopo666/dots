@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 set -euo pipefail
 
@@ -11,10 +11,11 @@ elif [ $# -eq 1 ]; then
 fi
 
 # Get already installed packages and their indices.
-INSTALLED=$(nix profile list | while IFS= read -r line; do
-  index=$(echo "$line" | awk '{print $1}')
-  name=$(echo "$line" | awk '{print $2}' | cut -d. -f3-)
-  echo "$index $name"
+index=0
+INSTALLED=$(nix profile list --json | jq '.elements[].attrPath' | while IFS= read -r line; do
+  attrPath=$(echo "$line" | cut -d. -f3-)
+  echo "$index :: $attrPath"
+  index=$((index+1))
 done)
 
 # Select packages and remove em'.

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 set -euo pipefail
 
@@ -15,6 +15,9 @@ done < "directories.txt"
 
 echo ":: Linking dotfiles..."
 ./bin/dot-link links.txt
+
+echo ":: Installing dependencies"
+nix profile install nixpkgs#jq
 
 echo ":: Installing packages..."
 ./bin/dot-install -f packages.txt

@@ -1,10 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 
 set -euo pipefail
 
 USAGE="Usage: $0 [-f input-file] [package]"
-PACKAGE=""; INPUT_FILE="";
-INSTALLED=""; 
+PACKAGE=""; INPUT_FILE=""; INSTALLED=""; 
 
 while [[ $# -gt 0 ]]; do
   case $1 in
@@ -23,8 +22,11 @@ fi
 install() {
   local name=$1
   if [ -z "$INSTALLED" ]; then
-    INSTALLED=$(nix profile list | while IFS= read -r line; do
-      echo "$line" | awk '{print $2}' | cut -d. -f3-
+    index=0
+    INSTALLED=$(nix profile list --json | jq '.elements[].attrPath' | while IFS= read -r line; do
+      attrPath=$(echo "$line" | cut -d. -f3-)
+      echo "$index :: $attrPath"
+      index=$((index+1))
     done)
   fi
   if echo "$INSTALLED" | grep -q "$name"; then
