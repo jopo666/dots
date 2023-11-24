@@ -10,9 +10,11 @@ export XDG_CACHE_HOME="$HOME/.cache"
 
 # ALIASES
 alias v="nvim"
+alias vd="nvim ."
 alias vi="nvim"
 alias vim="nvim"
 alias lg="lazygit"
+alias lzd="lazydocker"
 alias cat="bat --plain"
 alias update="sudo nixos-rebuild switch";
 alias ls="LC_COLLATE=C ls --color --group-directories-first"
@@ -30,16 +32,24 @@ alias ltd="tree -C -d --gitignore"
 alias ltd2="tree -C -d -L 2 --gitignore"
 alias ltd3="tree -C -d -L 3 --gitignore"
 alias ga='git add'
-alias gb='git branch '
+alias gbc='git checkout -b'
+alias gbd='git branch -d'
+alias gbl='git branch --list'
 alias gc='git commit -m'
 alias gca='git commit -am'
-alias gco='git checkout '
+alias gco='git checkout'
 alias gd='git diff'
-alias gl='git log --graph --oneline --decorate'
+alias gl="git log --all --graph --pretty=format:'%C(auto)%h%d %s %C(bold blue)[%aN]%Creset %Cgreen%ad%Creset' --date=relative"
 alias gpl='git pull'
 alias gps='git push'
+alias gr='git rebase -i'
+alias gra='git rebase --abort'
+alias grc='git rebase --continue'
+alias gre='git restore *'
 alias gs='git status'
+alias gsi='git submodule update --init --recursive'
 alias gsu='git submodule update'
+alias gsw='git switch'
 alias ta='tmux attach'
 alias tn='tmux new -s'
 alias d='dirs -v'
