@@ -6,6 +6,7 @@
 ### CLI ###
 bat
 fd
+flameshot
 fzf
 glow
 htop
