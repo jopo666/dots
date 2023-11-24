@@ -1,5 +1,6 @@
 ~/dots/bin => ~/.local/bin
 ~/dots/dotfiles/alacritty.yml => ~/.alacritty.yml
+~/dots/dotfiles/dunst => ~/.config/dunst
 ~/dots/dotfiles/git => ~/.config/git
 ~/dots/dotfiles/i3 => ~/.config/i3
 ~/dots/dotfiles/i3status => ~/.config/i3status

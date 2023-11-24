@@ -1,0 +1,44 @@
+[global]
+  alignment = center
+  ellipsize = end
+  font = "BigBlueTermPlus Nerd Font 10"
+  format = "<b>[%a]</b> %s\n%b"
+  frame_color = "#FFFFFF"
+  frame_width = 3
+  gap_size = 5
+  height = (0, 300)
+  hide_duplicate_count = true
+  history_length = 100
+  horizontal_padding = 8
+  idle_threshold = 0
+  markup = full
+  mouse_left_click = none
+  mouse_middle_click = none
+  mouse_right_click = none
+  notification_limit = 3
+  offset = 10x10
+  origin = bottom-center
+  padding = 4
+  separator_color = frame
+  separator_height = 3
+  show_age_threshold = 60
+  show_indicators = no
+  stack_duplicates = false
+  vertical_alignment = center
+  width = 800
+
+[urgency_low]
+    background = "#000000"
+    foreground = "#FFFFFF"
+    timeout = 0
+
+[urgency_normal]
+    background = "#000000"
+    foreground = "#FFFFFF"
+    timeout = 0
+
+[urgency_critical]
+    background = "#000000"
+    foreground = "#FFFFFF"
+    timeout = 0
+
