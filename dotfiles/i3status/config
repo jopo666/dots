@@ -5,8 +5,8 @@ general {
 }
  
 order += "volume master"
-order += "wireless wlp4s0"
-order += "battery 1"
+order += "wireless wlp0s20f3"
+order += "battery 0"
 order += "tztime local"
 order += "time"
 
@@ -21,6 +21,18 @@ wireless wlp4s0 {
   format_up = "wifi"
   format_down = "no wifi"
 }
+
+wireless wlp0s20f3 {
+  format_up = "wifi"
+  format_down = "no wifi"
+}
+
+battery 0 { 
+  format = "%percentage"
+  integer_battery_capacity = true
+  format_down = "no battery"
+  path = "/sys/class/power_supply/BAT%d/uevent"
+} 
 
 battery 1 { 
   format = "%percentage"
