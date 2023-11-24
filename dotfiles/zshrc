@@ -56,18 +56,18 @@ alias d='dirs -v'
 for index ({1..9}) alias "$index"="cd +${index}"; unset index
 
 # ZSH OPTIONS
+export HISTFILE="$XDG_CACHE_HOME/.zsh_history"
+export HISTSIZE=10000
+export SAVEHIST=10000
+setopt APPEND_HISTORY
 setopt AUTO_CD
 setopt AUTO_PUSHD
-setopt PUSHD_IGNORE_DUPS
-setopt PUSHD_SILENT
-setopt CORRECT
-export SAVEHIST=10000
-export HISTSIZE=10000
-export HISTFILE="$XDG_CACHE_HOME/.zsh_history"
-setopt APPEND_HISTORY
 setopt HIST_IGNORE_DUPS
 setopt HIST_REDUCE_BLANKS
 setopt INC_APPEND_HISTORY
+setopt MENU_COMPLETE
+setopt PUSHD_IGNORE_DUPS
+setopt PUSHD_SILENT
 setopt SHARE_HISTORY
 
 # KEYBINDS
@@ -81,7 +81,7 @@ bindkey ";5D" backward-word
 bindkey "5D" backward-word
 
 # COMPLETIONS
-autoload -U compinit; compinit
+autoload -U compinit && compinit
 zstyle ':completion:*' menu select
 zmodload zsh/complist
 bindkey -M menuselect 'h' vi-backward-char
@@ -96,6 +96,8 @@ tmux new -d -s scratch 2> /dev/null
 source $DOTFILES/dotfiles/antigen.zsh
 antigen bundle fzf
 antigen bundle ssh-agent
+antigen bundle zsh-users/zsh-completions
+antigen bundle zsh-users/zsh-autosuggestions
 antigen apply
 
 # PROMPT
