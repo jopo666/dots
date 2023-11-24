@@ -1,21 +1,12 @@
 [user]
-  name = jopo
-  email = jopo@birdlover.com
-  username = jopo66
+  name = Joona Pohjonen
+  email = joona.pohjonen@aiforia.com
 [init]
   defaultBranch = dev
 [core]
+	autocrlf = off
   editor = nvim
+	eol = lf
   whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
 [alias]
-  a = add
-  b = branch
-  c = commit
-  d = diff
-  f = fetch
-  l = log --oneline --graph --decorate
-  o = checkout
-  ps = push
-  pl = pull
-  r = rebase --interactive
-  s = status
+	lad = log --all --graph --pretty=format:'%Cgreen%ad%Creset %C(auto)%h%d %s %C(bold black)<%aN>%Creset' --date=format-local:'%Y-%m-%d %H:%M (%a)'
