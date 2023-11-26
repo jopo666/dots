@@ -4,10 +4,50 @@ set $super mod4
 set $open exec $HOME/.config/i3/open-if-not-running
 
 ### STARTUP ###
-exec_always --no-startup-id $HOME/.config/i3/autolayout autolayout &
 exec --no-startup-id unclutter -idle 1 &
 exec --no-startup-id dunst
-exec --no-startup-id chromium
+
+### WORKSPACES ###
+set $web 1:web
+exec --no-startup-id google-chrome
+assign [class="Google-chrome"] $web
+
+set $term 2:term
+exec --no-startup-id $open -w term -v term -s scratch 
+assign [class="term"] $term
+
+set $slack 3:slack
+exec --no-startup-id slack
+assign [class="Slack"] $slack
+
+set $mail 4:mail
+assign [class="mail"] $mail
+# TODO
+
+set $cal 5:cal
+assign [class="cal"] $cal
+# TODO
+
+set $git 6:git
+assign [class="git"] $git
+exec --no-startup-id alacritty --class git -e lazygit
+
+set $docker 7:docker
+assign [class="docker"] $docker
+exec --no-startup-id alacritty --class docker -e lazydocker
+
+set $files 7:files
+assign [class="files"] $files
+exec --no-startup-id alacritty --class files -e lf
+
+set $code 8:code
+assign [class="Code"] $code
+exec --no-startup-id code
+
+set $meet 9:meet
+assign [class="meet"] $meet
+# TODO
+
 
 ### GENERAL ###
 floating_modifier $alt
@@ -19,25 +59,24 @@ workspace_auto_back_and_forth no
 
 ### KEYBINDS ###
 bindsym $alt+Return exec alacritty
-bindsym $super+Return exec chromium
 bindsym $alt+q kill
-bindsym $alt+w workspace web;
-bindsym $alt+e workspace tty; $open -w tty -s scratch
-bindsym $alt+r restart
+bindsym $alt+w workspace $web; $open -w $web -v google-chrome -k class i3-msg 'exec google-chrome'
+bindsym $alt+e workspace $term; $open -w $term -v term -t tmux attach
+bindsym $alt+r workspace $code; $open -w $code -v Code i3-msg 'exec code'
+bindsym $alt+Shift+r restart
 bindsym $alt+t fullscreen toggle
 bindsym $alt+shift+t floating toggle
 bindsym $alt+y exec --no-startup-id  flameshot gui -s -c -p $HOME/captures/
 bindsym $alt+shift+y exec --no-startup-id  flameshot screen -c -p $HOME/captures/
-# y
 bindsym $alt+u resize shrink width 5 px or 5 ppt
 bindsym $alt+i resize grow width 5 px or 5 ppt
 bindsym $alt+o exec "dmenu_run -nf '#FFFFFF' -nb '#000000' -sb '#FFFFFF' -sf '#000000' -fn 'BigBlueTermPlus Nerd Font-11' -p ''"
 bindsym $alt+p workspace prev
-bindsym $alt+a workspace llm; $open -w llm -s llm
-# bindsym $alt+s workspace slack; $open -w slack -s slack
-# bindsym $alt+d workspace docker; $open -w docker -s docker lazydocker
-bindsym $alt+f workspace files; $open -w files -s files lf
-# g
+bindsym $alt+a workspace llm; $open -w llm -v llm -s llm
+bindsym $alt+s workspace $slack; $open -w $slack -v Slack exec i3-msg 'slack'
+bindsym $alt+d workspace $docker; $open -w $docker -v docker -t lazydocker
+bindsym $alt+f workspace $files; $open -w $files -v files -t lf
+bindsym $alt+g workspace $git; $open -w $git -v git -t lazygit
 bindsym $alt+h focus left
 bindsym $alt+Ctrl+h move left
 bindsym $alt+j focus down
@@ -46,13 +85,14 @@ bindsym $alt+k focus up
 bindsym $alt+Ctrl+k move up
 bindsym $alt+l focus right
 bindsym $alt+Ctrl+l move right
-#bindsym $alt+z workspace zoom; $open -w zoom -k name -v Zoom chromium zoom.us
-#bindsym --release $super+c exec --no-startup-id xdotool key --clearmodifiers Ctrl+Insert
-#bindsym --release $super+x exec --no-startup-id xdotool key --clearmodifiers Shift+Delete
-#bindsym --release $super+v exec --no-startup-id xdotool key --clearmodifiers Shift+Insert
+#bindsym $alt+z workspace $meet; $open -w $meet -v meet # TODO
+bindsym $alt+x exec dunstctl close
+bindsym $alt+Shift+x exec dunstctl history-pop
+#bindsym $alt+c workspace $cal; $open -w $cal -v cal # TODO
+# v
 bindsym $alt+b workspace back_and_forth
 bindsym $alt+n workspace next
-bindsym $alt+m workspace mail; $open -w mail -s mail neomutt
+#bindsym $alt+m workspace $mail; $open -w $mail -v mail # TODO
 # Shift
 bindsym $alt+1 workspace number 1
 bindsym $alt+2 workspace number 2
@@ -82,10 +122,9 @@ bindsym XF86AudioMicMute exec --no-startup-id amixer set Capture toggle
 
 ### MODES ###
 bindsym $alt+BackSpace mode "$powermenu"
-set $powermenu SYSTEM >> (L)OCK (H)IBERNATE (R)EBOOT (S)HUTDOWN
+set $powermenu << SYSTEM >> (L)OCK (H)IBERNATE (R)EBOOT (S)HUTDOWN
 set $screenlock i3lock -u -i $HOME/.config/i3/lockscreen.png
 mode "$powermenu" {
-    bindsym e exec --no-startup-id i3-msg exit, mode "default"
     bindsym l exec --no-startup-id $screenlock, mode "default"
     bindsym h exec --no-startup-id $screenlock && systemctl hibernate, mode "default"
     bindsym r exec --no-startup-id systemctl reboot, mode "default"
@@ -108,16 +147,17 @@ client.background       #FFFFFF
 bar {
   status_command i3status
   mode dock
+  strip_workspace_numbers yes
   hidden_state hide
   modifier $alt
   colors {
     background #000000
     statusline #FFFFFF
-    separator  #333333
+    separator  #000000
     focused_workspace  #FFFFFF #000000 #FFFFFF
     active_workspace   #000000 #000000 #FFFFFF
     inactive_workspace #000000 #000000 #FFFFFF
     urgent_workspace   #000000 #000000 #FFFFFF
-    binding_mode       #000000 #000000 #FF0000
+    binding_mode       #000000 #000000 #FFFFFF
   }
 }
