@@ -11,6 +11,7 @@ fzf
 glow
 htop
 jq
+imagemagick
 lazydocker
 lazygit
 lf
