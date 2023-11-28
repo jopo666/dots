@@ -17,15 +17,18 @@
   mouse_right_click = none
   notification_limit = 3
   offset = 10x10
-  origin = bottom-center
+  origin = top-right
   padding = 4
   separator_color = frame
   separator_height = 3
   show_age_threshold = 60
-  show_indicators = no
-  stack_duplicates = false
+  show_indicators = yes
+  stack_duplicates = true
   vertical_alignment = center
-  width = 800
+  width = 500
+  mouse_left_click = close_current
+  mouse_middle_click = do_action, close_current
+  mouse_right_click = close_all
 
 [urgency_low]
     background = "#000000"
