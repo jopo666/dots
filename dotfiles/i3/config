@@ -2,6 +2,7 @@
 set $alt mod1
 set $super mod4
 set $open exec $HOME/.config/i3/open-if-not-running
+set $lockscreen $HOME/.config/i3/lockscreen.sh
 
 ### STARTUP ###
 exec --no-startup-id unclutter -idle 1 &
@@ -20,33 +21,24 @@ set $slack 3:slack
 exec --no-startup-id slack
 assign [class="Slack"] $slack
 
-set $mail 4:mail
-assign [class="mail"] $mail
-# TODO
+set $code 4:code
+assign [class="Code"] $code
 
-set $cal 5:cal
-assign [class="cal"] $cal
-# TODO
-
-set $git 6:git
+set $git 5:git
 assign [class="git"] $git
 exec --no-startup-id alacritty --class git -e lazygit
 
-set $docker 7:docker
+set $docker 6:docker
 assign [class="docker"] $docker
 exec --no-startup-id alacritty --class docker -e lazydocker
 
 set $files 7:files
 assign [class="files"] $files
-exec --no-startup-id alacritty --class files -e lf
 
-set $code 8:code
-assign [class="Code"] $code
-exec --no-startup-id code
-
-set $meet 9:meet
+set $work 8:work
+assign [class="mail"] $mail
+assign [class="cal"] $cal
 assign [class="meet"] $meet
-# TODO
 
 
 ### GENERAL ###
@@ -62,12 +54,12 @@ bindsym $alt+Return exec alacritty
 bindsym $alt+q kill
 bindsym $alt+w workspace $web; $open -w $web -v google-chrome -k class i3-msg 'exec google-chrome'
 bindsym $alt+e workspace $term; $open -w $term -v term -t tmux attach
-bindsym $alt+r workspace $code; $open -w $code -v Code i3-msg 'exec code'
+bindsym $alt+r workspace $code; $open -w $code -v Code alacritty -e code
 bindsym $alt+Shift+r restart
 bindsym $alt+t fullscreen toggle
 bindsym $alt+shift+t floating toggle
-bindsym $alt+y exec --no-startup-id  flameshot gui -s -c -p $HOME/captures/
-bindsym $alt+shift+y exec --no-startup-id  flameshot screen -c -p $HOME/captures/
+bindsym --release $alt+y exec --no-startup-id scrot ~/captures/%y%m%d-%H%M.jpg -s -e 'xclip -selection clipboard -t image/png -i $f'
+bindsym --release $alt+shift+y exec --no-startup-id scrot ~/captures/%y%m%d-%H%M.jpg -e 'xclip -selection clipboard -t image/png -i $f'
 bindsym $alt+u resize shrink width 5 px or 5 ppt
 bindsym $alt+i resize grow width 5 px or 5 ppt
 bindsym $alt+o exec "dmenu_run -nf '#FFFFFF' -nb '#000000' -sb '#FFFFFF' -sf '#000000' -fn 'BigBlueTermPlus Nerd Font-11' -p ''"
@@ -85,15 +77,14 @@ bindsym $alt+k focus up
 bindsym $alt+Ctrl+k move up
 bindsym $alt+l focus right
 bindsym $alt+Ctrl+l move right
-#bindsym $alt+z workspace $meet; $open -w $meet -v meet # TODO
-bindsym $alt+x exec dunstctl close
-bindsym $alt+Shift+x exec dunstctl history-pop
-#bindsym $alt+c workspace $cal; $open -w $cal -v cal # TODO
+# z
+bindsym $alt+space exec dunstctl close-all
+bindsym $alt+Shift+space exec dunstctl history-pop
+# c
 # v
 bindsym $alt+b workspace back_and_forth
 bindsym $alt+n workspace next
-#bindsym $alt+m workspace $mail; $open -w $mail -v mail # TODO
-# Shift
+bindsym $alt+m workspace $work
 bindsym $alt+1 workspace number 1
 bindsym $alt+2 workspace number 2
 bindsym $alt+3 workspace number 3
@@ -122,11 +113,11 @@ bindsym XF86AudioMicMute exec --no-startup-id amixer set Capture toggle
 
 ### MODES ###
 bindsym $alt+BackSpace mode "$powermenu"
-set $powermenu << SYSTEM >> (L)OCK (H)IBERNATE (R)EBOOT (S)HUTDOWN
-set $screenlock i3lock -u -i $HOME/.config/i3/lockscreen.png
+set $powermenu << SYSTEM >> (L)OCK (E)XIT (H)IBERNATE (R)EBOOT (S)HUTDOWN
 mode "$powermenu" {
-    bindsym l exec --no-startup-id $screenlock, mode "default"
-    bindsym h exec --no-startup-id $screenlock && systemctl hibernate, mode "default"
+    bindsym e exec --no-startup-id i3-msg 'exit', mode "default"
+    bindsym l exec --no-startup-id $lockscreen, mode "default"
+    bindsym h exec --no-startup-id $lockscreen && systemctl hibernate, mode "default"
     bindsym r exec --no-startup-id systemctl reboot, mode "default"
     bindsym s exec --no-startup-id systemctl poweroff -i, mode "default"
     bindsym Return mode "default"
@@ -140,7 +131,7 @@ mode "$powermenu" {
 client.focused          #000000 #000000 #FFFFFF #FFFFFF   #FFFFFF
 client.focused_inactive #000000 #000000 #FFFFFF #000000   #000000
 client.unfocused        #000000 #000000 #FFFFFF #000000   #000000
-client.urgent           #000000 #000000 #FFFFFF #000000   #000000
+client.urgent           #000000 #000000 #FF0000 #FF0000   #000000
 client.placeholder      #000000 #000000 #FFFFFF #000000   #000000
 client.background       #FFFFFF
 
