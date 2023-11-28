@@ -32,7 +32,6 @@ alias lta3="tree -C -a -L 3 --gitignore"
 alias ltd="tree -C -d --gitignore"
 alias ltd2="tree -C -d -L 2 --gitignore"
 alias ltd3="tree -C -d -L 3 --gitignore"
-alias ask="ollama run codellama Give me a short answer with only a code snippet. Do not explain anything!"
 alias ga='git add'
 alias gbc='git checkout -b'
 alias gbd='git branch -d'
