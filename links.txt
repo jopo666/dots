@@ -11,6 +11,7 @@
 ~/dots/dotfiles/ssh_config => ~/.ssh/config
 ~/dots/dotfiles/starship.toml => ~/.config/starship.toml
 ~/dots/dotfiles/tmux.conf => ~/.tmux.conf
+~/dots/dotfiles/work.zsh => ~/.work.zsh
 ~/dots/dotfiles/xinitrc => ~/.xinitrc
 ~/dots/dotfiles/xprofile => ~/.xprofile
 ~/dots/dotfiles/xresources => ~/.Xresources
