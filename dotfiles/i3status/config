@@ -3,7 +3,7 @@ general {
   separator = "  "
   interval = 1
 }
- 
+
 order += "volume master"
 order += "wireless wlp0s20f3"
 order += "battery 0"
@@ -32,14 +32,14 @@ battery 0 {
   integer_battery_capacity = true
   format_down = "no battery"
   path = "/sys/class/power_supply/BAT%d/uevent"
-} 
+}
 
 battery 1 { 
   format = "%percentage"
   integer_battery_capacity = true
   format_down = "no battery"
   path = "/sys/class/power_supply/BAT%d/uevent"
-} 
+}
 
 tztime local {
   format = "%D"
