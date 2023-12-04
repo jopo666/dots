@@ -14,7 +14,7 @@ exec --no-startup-id google-chrome
 assign [class="Google-chrome"] $web
 
 set $term 2:term
-exec --no-startup-id $open -w term -v term -s scratch 
+exec --no-startup-id $open -w term -v term -s scratch
 assign [class="term"] $term
 
 set $slack 3:slack
@@ -66,9 +66,10 @@ bindsym $alt+o exec "dmenu_run -nf '#FFFFFF' -nb '#000000' -sb '#FFFFFF' -sf '#0
 bindsym $alt+p workspace prev
 bindsym $alt+a workspace llm; $open -w llm -v llm -s llm
 bindsym $alt+s workspace $slack; $open -w $slack -v Slack exec i3-msg 'slack'
+bindsym $alt+Shift+s fullscreen disable; sticky toggle
 bindsym $alt+d workspace $docker; $open -w $docker -v docker -t lazydocker
 bindsym $alt+f workspace $files; $open -w $files -v files -t lf
-bindsym $alt+g workspace $git; $open -w $git -v git -t lazygit
+# g
 bindsym $alt+h focus left
 bindsym $alt+Ctrl+h move left
 bindsym $alt+j focus down
@@ -81,7 +82,7 @@ bindsym $alt+Ctrl+l move right
 bindsym $alt+space exec dunstctl close-all
 bindsym $alt+Shift+space exec dunstctl history-pop
 # c
-# v
+bindsym $alt+v workspace $git; $open -w $git -v git -t lazygit
 bindsym $alt+b workspace back_and_forth
 bindsym $alt+n workspace next
 bindsym $alt+m workspace $work
