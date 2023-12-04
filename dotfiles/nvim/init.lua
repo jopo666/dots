@@ -210,7 +210,7 @@ require('lazy').setup({
       local on_attach = function(_, bufnr)
         local tsb = require('telescope.builtin')
         vim.keymap.set('n', 'K', vim.lsp.buf.hover, { buffer = bufnr })
-        vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help,{ buffer = bufnr })
+        vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, { buffer = bufnr })
         vim.keymap.set('n', '<leader>a', vim.lsp.buf.code_action, { buffer = bufnr, desc = 'Code action' })
         vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename, { buffer = bufnr, desc = 'Rename variable' })
         vim.keymap.set('n', 'gr', tsb.lsp_references, { buffer = bufnr, desc = 'LSP: References' })
