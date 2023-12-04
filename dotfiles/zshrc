@@ -1,5 +1,5 @@
 # PATH
-export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$HOME/.dotnet/:$PATH"
+export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$HOME/work/scripts:$PATH"
 
 # EXPORTS
 export EDITOR="nvim"
@@ -32,6 +32,9 @@ alias lta3="tree -C -a -L 3 --gitignore"
 alias ltd="tree -C -d --gitignore"
 alias ltd2="tree -C -d -L 2 --gitignore"
 alias ltd3="tree -C -d -L 3 --gitignore"
+alias yank="xclip -sel clipboard"
+alias dstop="docker ps -aq | xargs -r docker stop"
+alias dpurge="docker ps -aq | xargs -r docker stop | xargs -r docker rm &&  docker volume prune -af && docker system prune -af"
 alias ga='git add'
 alias gbc='git checkout -b'
 alias gbd='git branch -d'
@@ -53,8 +56,7 @@ alias gsu='git submodule update'
 alias gsw='git switch'
 alias ta='tmux attach'
 alias tn='tmux new -s'
-alias d='dirs -v'
-for index ({1..9}) alias "$index"="cd +${index}"; unset index
+alias cd='z'
 
 # ZSH OPTIONS
 export HISTFILE="$XDG_CACHE_HOME/.zsh_history"
@@ -62,7 +64,9 @@ export HISTSIZE=10000
 export SAVEHIST=10000
 setopt APPEND_HISTORY
 setopt AUTO_CD
+setopt AUTO_LIST
 setopt AUTO_PUSHD
+setopt COMPLETE_IN_WORD
 setopt HIST_IGNORE_DUPS
 setopt HIST_REDUCE_BLANKS
 setopt INC_APPEND_HISTORY
@@ -81,15 +85,6 @@ bindkey "5C" forward-word
 bindkey ";5D" backward-word
 bindkey "5D" backward-word
 
-# COMPLETIONS
-autoload -U compinit && compinit
-zstyle ':completion:*' menu select
-zmodload zsh/complist
-bindkey -M menuselect 'h' vi-backward-char
-bindkey -M menuselect 'k' vi-up-line-or-history
-bindkey -M menuselect 'l' vi-forward-char
-bindkey -M menuselect 'j' vi-down-line-or-history
-
 # TMUX
 tmux new -d -s scratch 2> /dev/null
 
@@ -101,5 +96,19 @@ antigen bundle zsh-users/zsh-completions
 antigen bundle zsh-users/zsh-autosuggestions
 antigen apply
 
-# PROMPT
+# COMPLETIONS
+autoload compinit && compinit
+zstyle ':completion:*' menu select
+zstyle ':completion:*' complete true
+zstyle ':completion:*' complete-options true
+zstyle ':completion:*' use-cache on
+zmodload zsh/complist
+
+bindkey -M menuselect 'h' vi-backward-char
+bindkey -M menuselect 'k' vi-up-line-or-history
+bindkey -M menuselect 'l' vi-forward-char
+bindkey -M menuselect 'j' vi-down-line-or-history
+
+# INITIALIZATIONS
+eval "$(zoxide init zsh)"
 eval "$(starship init zsh)"
