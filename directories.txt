@@ -5,6 +5,6 @@
 ~/captures
 ~/downloads
 ~/mail
-~/projects
+~/code
 ~/work
 
