@@ -15,7 +15,7 @@ truncate_to_repo = false
 [git_branch]
 format = '$branch'
 style = 'bold bright-white'
-truncation_length = 20
+truncation_length = 30
 
 [git_status]
 format = ' \[$staged$conflicted$modified$deleted$renamed$untracked$ahead_behind\]'

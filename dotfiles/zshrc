@@ -7,7 +7,6 @@ export DOTFILES="$HOME/dots"
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_CACHE_HOME="$HOME/.cache"
-source $HOME/.work.zsh
 
 # ALIASES
 alias v="nvim"
@@ -84,6 +83,18 @@ bindkey ";5C" forward-word
 bindkey "5C" forward-word
 bindkey ";5D" backward-word
 bindkey "5D" backward-word
+
+# COMPLETIONS
+autoload compinit && compinit
+zstyle ':completion:*' menu select
+zstyle ':completion:*' complete true
+zstyle ':completion:*' complete-options true
+zstyle ':completion:*' use-cache on
+zmodload zsh/complist
+bindkey -M menuselect 'h' vi-backward-char
+bindkey -M menuselect 'k' vi-up-line-or-history
+bindkey -M menuselect 'l' vi-forward-char
+bindkey -M menuselect 'j' vi-down-line-or-history
 
 # TMUX
 tmux new -d -s scratch 2> /dev/null

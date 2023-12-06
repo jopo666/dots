@@ -1,0 +1,145 @@
+### VARIABLES ###
+set $alt mod1
+set $super mod4
+set $font IBM Plex Mono
+set $fontsize 10
+set $term alacritty
+set $browser firefox
+set $lockscreen 'swaylock -u -c 282828 -i $HOME/.config/sway/lockscreen.png'
+
+### STARTUP ###
+exec dunst
+exec swayidle -w \
+    timeout 300 $lockscreen \
+    timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
+    before-sleep $lockscreen
+
+### SETTINGS ###
+default_border pixel 4
+floating_modifier $alt
+font pango:$font $fontsize
+smart_borders on
+workspace_auto_back_and_forth no
+
+### WORKSPACES ###
+assign [app_id="firefox"] 1:web
+assign [app_id="term"] 2:tty
+assign [app_id="mail"] mail
+assign [app_id="Slack"] slack
+assign [app_id="Code"] code
+exec --no-startup-id $browser
+exec --no-startup-id $term --class term -e tmux attach
+#exec --no-startup-id slack
+#exec --no-startup-id code
+
+### KEYBINDS ###
+bindsym $alt+q kill
+bindsym $alt+w workspace 1:web
+bindsym $alt+e workspace 2:tty
+bindsym $alt+shift+r reload
+bindsym $alt+t layout toggle tabbed split
+bindsym $alt+i resize grow width 5 px or 5 ppt
+bindsym $alt+shift+I resize shrink width 5 px or 5 ppt
+bindsym $alt+p workspace prev
+# bindsym $alt+s workspace slack
+bindsym $alt+shift+s floating on; fullscreen disable; sticky toggle
+# bindsym $alt+a workspace code
+bindsym $alt+d exec "dmenu_run -nf '#FFFFFF' -nb '#000000' -sb '#FFFFFF' -sf '#000000' -fn '$font-$fontsize' -p ''"
+bindsym $alt+f fullscreen toggle
+bindsym $alt+Shift+f floating toggle
+bindsym $alt+x exec dunstctl close-all
+bindsym $alt+Shift+x exec dunstctl history-pop
+bindsym $alt+b workspace back_and_forth
+bindsym $alt+n workspace next
+bindsym $super+return exec $browser
+bindsym $alt+return exec $term
+bindsym $alt+space exec swaymsg input type:keyboard xkb_switch_layout next
+bindsym XF86MonBrightnessUp exec brightnessctl s 10%+
+bindsym XF86MonBrightnessDown exec brightnessctl s 10%-
+bindsym XF86AudioRaiseVolume exec --no-startup-id pulsemixer --change-volume +25
+bindsym XF86AudioLowerVolume exec --no-startup-id pulsemixer --change-volume -25
+bindsym XF86AudioMute exec --no-startup-id pulsemixer --toggle-mute
+bindsym XF86AudioMicMute exec --no-startup-id amixer set Capture toggle
+
+bindsym $alt+h focus left
+bindsym $alt+j focus down
+bindsym $alt+k focus up
+bindsym $alt+l focus right
+bindsym $alt+Ctrl+h move left
+bindsym $alt+Ctrl+j move down
+bindsym $alt+Ctrl+k move up
+bindsym $alt+Ctrl+l move right
+bindsym $alt+1 workspace number 1
+bindsym $alt+2 workspace number 2
+bindsym $alt+3 workspace number 3
+bindsym $alt+4 workspace number 4
+bindsym $alt+5 workspace number 5
+bindsym $alt+6 workspace number 6
+bindsym $alt+7 workspace number 7
+bindsym $alt+8 workspace number 8
+bindsym $alt+9 workspace number 9
+bindsym $alt+Shift+1 move container to workspace number 1
+bindsym $alt+Shift+2 move container to workspace number 2
+bindsym $alt+Shift+3 move container to workspace number 3
+bindsym $alt+Shift+4 move container to workspace number 4
+bindsym $alt+Shift+5 move container to workspace number 5
+bindsym $alt+Shift+6 move container to workspace number 6
+bindsym $alt+Shift+7 move container to workspace number 7
+bindsym $alt+Shift+8 move container to workspace number 8
+bindsym $alt+Shift+9 move container to workspace number 9
+
+### MODES ###
+bindsym $alt+BackSpace mode "$powermenu"
+set $powermenu << SYSTEM >> (L)OCK (E)XIT (H)IBERNATE (R)EBOOT (S)HUTDOWN
+mode "$powermenu" {
+    bindsym e exec --no-startup-id swaymsg 'exit' && exit, mode "default"
+    bindsym l exec --no-startup-id $lockscreen, mode "default"
+    bindsym h exec --no-startup-id $lockscreen && systemctl hibernate, mode "default"
+    bindsym r exec --no-startup-id shutdown now -r, mode "default"
+    bindsym s exec --no-startup-id shutdown now, mode "default"
+    bindsym Return mode "default"
+    bindsym BackSpace mode "default"
+    bindsym Escape mode "default"
+}
+
+### INPUT/OUTPUT ###
+input type:keyboard {
+    xkb_layout us,fi
+        xkb_options ctrl:nocaps
+        repeat_delay 250
+        repeat_rate 100
+}
+
+
+### COLORS ###
+#                       border  bground text    indicator child_border
+client.focused          #FFFFFF #000000 #FFFFFF #FFFFFF   #FFFFFF
+client.focused_inactive #000000 #000000 #FFFFFF #000000   #000000
+client.unfocused        #000000 #000000 #FFFFFF #000000   #000000
+client.urgent           #000000 #000000 #FF0000 #FF0000   #000000
+client.placeholder      #000000 #000000 #FFFFFF #000000   #000000
+client.background       #FFFFFF
+
+bar {
+    font pango:$font $fontsize
+    status_command i3status-rs $HOME/.config/sway/statusbar.toml
+    position bottom
+    mode dock
+    strip_workspace_numbers yes
+    hidden_state hide
+    modifier $alt
+    colors {
+        background #000000
+        statusline #FFFFFF
+        separator  #000000
+        focused_workspace  #FFFFFF #000000 #FFFFFF
+        active_workspace   #000000 #000000 #FFFFFF
+        inactive_workspace #000000 #000000 #FFFFFF
+        urgent_workspace   #000000 #000000 #FFFFFF
+        binding_mode       #000000 #000000 #FFFFFF
+    }
+}
+
+# Environment variables
+include /etc/sway/config.d/*
+

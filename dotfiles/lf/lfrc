@@ -27,14 +27,11 @@ map gf cd ~/flakies
 map gd cd ~/Downloads
 map g. cd ~/.config
 # create
-map a
-map af push %touch<space>
-map ad push %mkdir<space>
+map % push %touch<space>
+map D push %mkdir<space>
 # execute
 map x
-map xx $$f
-map x! !$f
-map xa % chmod +x $f 
+map xa % chmod +x $f
 # delete
 map d
 map df delete

@@ -1,22 +1,18 @@
-#!/bin/bash
-
 set -euo pipefail
 
-USAGE="Usage: $0 [-f input-file] [package]"
-PACKAGE=""; INPUT_FILE=""; INSTALLED=""; 
-
+USAGE="Usage: $0 [package]"
+PACKAGE="";
+INSTALLED="";
 while [[ $# -gt 0 ]]; do
   case $1 in
-    -f) INPUT_FILE="$2"; shift 2; ;;
     -h|--help) echo $USAGE; exit 1; ;;
     -*|--*) echo $USAGE; echo "Unknown option $1."; exit 1; ;;
     *) PACKAGE=$1; shift 1; ;;
   esac
 done
 
-if [ -z "$PACKAGE" ] && [ -z "$INPUT_FILE" ]; then
-  echo $USAGE; echo "Provide either input file or package name.";
-  exit 1
+if [ -z "$PACKAGE" ]; then
+  echo $USAGE; echo "No package name given."; exit 1;
 fi
 
 install() {
@@ -38,13 +34,13 @@ install() {
 }
 
 if [ ! -z "$PACKAGE" ]; then
-  install $PACKAGE
+install $PACKAGE
 else
-  while IFS= read -r line; do
+  while ifs= read -r line; do
     if [[ -n "$line" && "$line" != \#* ]]; then
       package=$(echo "$line" | awk '{print $1}')
       install $package
     fi
-  done < "$INPUT_FILE"
+  done < "$input_file"
 fi
 
