@@ -1,17 +1,15 @@
 [user]
-  name = Joona Pohjonen
-  email = joona.pohjonen@aiforia.com
+    name = joona
+    email = joona.pohjonen@aiforia.com
 [init]
-  defaultBranch = dev
+    defaultBranch = dev
 [core]
-	autocrlf = off
-  editor = nvim
-	eol = lf
-  whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
-[alias]
-	lad = log --all --graph --pretty=format:'%Cgreen%ad%Creset %C(auto)%h%d %s %C(bold black)<%aN>%Creset' --date=format-local:'%Y-%m-%d %H:%M (%a)'
+    autocrlf = off
+    editor = nvim
+    eol = lf
+    whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
 [filter "lfs"]
-	smudge = git-lfs smudge -- %f
-	process = git-lfs filter-process
-	required = true
-	clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+    required = true
+    clean = git-lfs clean -- %f
