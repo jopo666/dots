@@ -1,54 +1,43 @@
-### APPS ###
-# Uncomment only on NixOs, OpenGL does not work on other distros.
+### MANUAL ###
 # alacritty
+# chrome
 # firefox
+# slack
+
+### OS ###
+# bash
+# docker
+# git
+# sway
+# zsh
 
 ### CLI ###
 bat
+brightnessctl
+dmenu
 fd
-flameshot
 fzf
 glow
 htop
+i3status-rust
 jq
-imagemagick
 lazydocker
 lazygit
 lf
+mako
 neovim
 pass
 pulsemixer
+python312
 ripgrep
 rm-improved
+rustup
 slides
 starship
 tmux
 tree
 unzip
-xcape
-xclip
+wget
+wl-clipboard
 zip
 zoxide
-
-### LANGUAGES ###
-cmake
-gcc
-python312
-rustup
-
-### SYSTEM ###
-brightnessctl
-dmenu
-dunst
-pulsemixer
-unclutter
-wget
-xdotool
-
-### OS ###
-#bash
-#git
-#i3
-#zsh
-#docker
-
