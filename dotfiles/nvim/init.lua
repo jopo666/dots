@@ -2,7 +2,8 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 vim.g.netrw_keepdir = 0
 vim.g.netrw_liststyle = 0
-vim.g.netrw_use_errorwindow = 2
+vim.g.netrw_preview = 1
+vim.g.netrw_use_errorwindow = 0
 
 -- OPTIONS --
 vim.opt.breakindent = true
@@ -37,69 +38,50 @@ vim.opt.diffopt = vim.opt.diffopt + "iwhiteall"
 vim.cmd [[ au FileType * set fo-=c fo-=r fo-=o ]]
 vim.cmd [[ au TextYankPost * silent! lua vim.highlight.on_yank() ]]
 vim.cmd [[ autocmd BufWritePre * :%s/\s\+$//e ]]
-vim.cmd [[
-    au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
-]]
+vim.cmd [[ au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif ]]
 
 -- KEYMAPS --
-vim.keymap.set('n', 'Q', '<nop>')
+vim.keymap.set('i', 'jk', '<esc>')
+vim.keymap.set('n', 'q:', '<nop>')
 vim.keymap.set('x', '>', '>gv')
 vim.keymap.set('x', '<', '<gv')
-vim.keymap.set('n', '<tab>', '<cmd>bn<cr>')
-vim.keymap.set('n', '<s-tab>', '<cmd>bp<cr>')
--- move visual lines.
-vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
-vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
--- always center view
 vim.keymap.set('n', '<c-d>', '<c-d>zz')
 vim.keymap.set('n', '<c-u>', '<c-u>zz')
 vim.keymap.set('n', 'n', 'nzzzv')
 vim.keymap.set('n', 'N', 'Nzzzv')
-vim.keymap.set('n', 'J', 'mzJ`z')
+vim.keymap.set('n', 'p', 'p`[v`]=<esc>')
+vim.keymap.set('c', '<c-p>', '<up>')
+vim.keymap.set('c', '<c-n>', '<down>')
+vim.keymap.set('x', 'p', [["_dP]])
 -- easy movements
-vim.keymap.set('n', '<c-h>', '^')
-vim.keymap.set('n', '<c-j>', '(')
-vim.keymap.set('n', '<c-k>', ')')
-vim.keymap.set('n', '<c-l>', '$')
+vim.keymap.set('n', '<c-e>', '$')
+vim.keymap.set('n', '<c-a>', '^')
+vim.keymap.set('i', '<c-e>', '<c-o>$')
+vim.keymap.set('i', '<c-a>', '<c-o>^')
 vim.keymap.set('i', '<c-k>', '<up>')
 vim.keymap.set('i', '<c-j>', '<down>')
 vim.keymap.set('i', '<c-h>', '<left>')
 vim.keymap.set('i', '<c-l>', '<right>')
-vim.keymap.set('i', '<c-e>', '<c-o>$')
-vim.keymap.set('i', '<c-a>', '<c-o>^')
--- don't copy on paste
-vim.keymap.set('x', 'p', [["_dP]])
--- autoformat
-vim.keymap.set('n', 'p', 'p`[v`]=<esc>')
-vim.keymap.set('i', 'jk', '<esc>')
--- smart cmd completion
-vim.keymap.set('c', '<c-p>', '<up>')
-vim.keymap.set('c', '<c-n>', '<down>')
--- movement
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Prev diagnostic' })
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Next diagnostic' })
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
+vim.keymap.set('n', '<c-up>', '<cmd>cprev<cr>')
+vim.keymap.set('n', '<c-down>', '<cmd>cnext<cr>')
+vim.keymap.set('n', '<tab>', '<cmd>bn<cr>')
+vim.keymap.set('n', '<s-tab>', '<cmd>bp<cr>')
 -- leader keys
-vim.keymap.set('n', '<c-up>', '<cmd>cprev<cr>', { desc = 'Next quickfix entry', silent = true })
-vim.keymap.set('n', '<c-down>', '<cmd>cnext<cr>', { desc = 'Previous quickfix entry', silent = true })
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show error' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Show diagnostics' })
-vim.keymap.set('n', '<leader>x', '<cmd>!chmod +x %<CR>', { desc = 'Make file executable' })
-vim.keymap.set({ 'n', 'x' }, '<leader>y', '"*y', { desc = "Yank to clipborad" })
-vim.keymap.set({ 'n', 'x' }, '<leader>Y', '"*y', { desc = "Yank to clipborad" })
-vim.keymap.set({ 'n', 'x' }, '<leader>p', '"*p', { desc = "Paste from clipborad" })
-vim.keymap.set({ 'n', 'x' }, '<leader>p', '"*p', { desc = "Paste from clipborad" })
+vim.keymap.set('n', '<leader>x', '<cmd>bdelete<CR>', { desc = 'Delete buffer' })
+vim.keymap.set('n', '<leader>X', '<cmd>!chmod +x %<CR>', { desc = 'Make file executable' })
+vim.keymap.set({ 'n', 'x' }, '<leader>y', '"+y', { desc = "yank to clipborad" })
+vim.keymap.set({ 'n', 'x' }, '<leader>Y', '"+Y', { desc = "yank to clipborad" })
+vim.keymap.set({ 'n', 'x' }, '<leader>p', '"+p', { desc = "paste from clipborad" })
+vim.keymap.set({ 'n', 'x' }, '<leader>P', '"+P', { desc = "Paste from clipborad" })
 
 -- PLUGIN MANAGER --
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system {
-    'git',
-    'clone',
-    '--filter=blob:none',
-    'https://github.com/folke/lazy.nvim.git',
-    '--branch=stable', -- latest stable release
-    lazypath,
-  }
+  vim.fn.system { 'git', 'clone', '--filter=blob:none', 'https://github.com/folke/lazy.nvim.git', '--branch=stable', lazypath, }
 end
 vim.opt.rtp:prepend(lazypath)
 
@@ -141,13 +123,10 @@ require('lazy').setup({
           { mode = 'x', keys = '<leader>' },
           { mode = 'n', keys = '<C-w>' },
           { mode = 'x', keys = '<C-w>' },
-          { mode = 'n', keys = 'z' },
-          { mode = 'x', keys = 'z' },
         },
         clues = {
           miniclue.gen_clues.builtin_completion(),
           miniclue.gen_clues.windows(),
-          miniclue.gen_clues.z(),
         },
         window = {
           delay = 0,
@@ -188,7 +167,6 @@ require('lazy').setup({
         vim.keymap.set('n', '<leader>S', gs.reset_hunk, { buffer = bufnr, desc = 'Restore hunk' })
         vim.keymap.set('x', '<leader>S', function() gs.reset_hunk { vim.fn.line('.'), vim.fn.line('v') } end,
           { buffer = bufnr, desc = 'Restore hunk' })
-        vim.keymap.set('n', '<leader>R', gs.reset_buffer, { buffer = bufnr, desc = 'Restore buffer' })
         vim.keymap.set('n', '<leader>B', gs.toggle_current_line_blame, { buffer = bufnr, desc = 'Toggle blame' })
         vim.keymap.set('n', '<leader>b', function() gs.blame_line { full = true } end,
           { buffer = bufnr, desc = 'Toggle line blame' })
@@ -202,25 +180,17 @@ require('lazy').setup({
     config = function()
       pcall(require('telescope').load_extension, 'fzf')
       local tsb = require('telescope.builtin')
-      local ivy = require('telescope.themes').get_ivy({
-        layout_config = {
-          height = 10,
-        },
-        show_line = false,
-        results_title = false,
-        previewer = false,
-      })
-      vim.keymap.set('n', '<C-p>', function() tsb.git_files(ivy) end, { desc = 'Search git files' })
-      vim.keymap.set('n', '<leader>/', function() tsb.current_buffer_fuzzy_find(ivy) end, { desc = 'Search buffer' })
-      vim.keymap.set('n', '<leader>sb', function() tsb.buffers(ivy) end, { desc = 'Search buffers' })
-      vim.keymap.set('n', '<leader>sd', function() tsb.diagnostics(ivy) end, { desc = 'Search diagnostics' })
-      vim.keymap.set('n', '<leader>sf', function() tsb.find_files(ivy) end, { desc = 'Search files' })
-      vim.keymap.set('n', '<leader>sg', function() tsb.live_grep(ivy) end, { desc = 'Search by grep' })
-      vim.keymap.set('n', '<leader>ss', function() tsb.spell_suggest(ivy) end, { desc = 'Search spell suggestions' })
-      vim.keymap.set('n', '<leader>sc', function() tsb.colorscheme(ivy) end, { desc = 'Search colorscheme' })
-      vim.keymap.set('n', '<leader>sh', function() tsb.help_tags(ivy) end, { desc = 'Search help' })
-      vim.keymap.set('n', '<leader>sr', function() tsb.oldfiles(ivy) end, { desc = 'Search recent files.' })
-      vim.keymap.set('n', '<leader>so', function() tsb.vim_options(ivy) end, { desc = 'Search vim options' })
+      vim.keymap.set('n', '<C-p>', function() tsb.git_files({}) end, { desc = 'Search git files' })
+      vim.keymap.set('n', '<leader>/', function() tsb.current_buffer_fuzzy_find({}) end, { desc = 'Search buffer' })
+      vim.keymap.set('n', '<leader><space>b', function() tsb.buffers({}) end, { desc = 'Search buffers' })
+      vim.keymap.set('n', '<leader><space>d', function() tsb.diagnostics({}) end, { desc = 'Search diagnostics' })
+      vim.keymap.set('n', '<leader><space>f', function() tsb.find_files({}) end, { desc = 'Search files' })
+      vim.keymap.set('n', '<leader><space>g', function() tsb.live_grep({}) end, { desc = 'Search by grep' })
+      vim.keymap.set('n', '<leader><space>s', function() tsb.spell_suggest({}) end, { desc = 'Search spell suggestions' })
+      vim.keymap.set('n', '<leader><space>c', function() tsb.colorscheme({enable_preview = true}) end, { desc = 'Search colorscheme' })
+      vim.keymap.set('n', '<leader><space>h', function() tsb.help_tags({}) end, { desc = 'Search help' })
+      vim.keymap.set('n', '<leader><space>r', function() tsb.oldfiles({}) end, { desc = 'Search recent files' })
+      vim.keymap.set('n', '<leader><space>o', function() tsb.vim_options({}) end, { desc = 'Search vim options' })
     end
   },
   -- LSP configuration.
@@ -331,6 +301,7 @@ require('lazy').setup({
     },
     build = ':TSUpdate',
     opt = {
+      ensure_installed = { 'c', 'lua', 'markdown', 'markdown_inline', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash' },
       auto_install = true,
       indent = { enable = true },
       highlight = { enable = true },
