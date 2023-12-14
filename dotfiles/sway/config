@@ -10,7 +10,7 @@ set $screenoff 'swaymsg "output * dpms off"'
 set $screenon 'swaymsg "output * dpms off"'
 
 ### STARTUP ###
-exec dunst
+exec mako
 exec swayidle -w timeout 300 $lock timeout 600 $screenoff resume $screenon before-sleep $lock
 
 ### SETTINGS ###
@@ -46,8 +46,8 @@ bindsym $alt+shift+s floating on; fullscreen disable; sticky toggle
 # bindsym $alt+a workspace code
 bindsym $alt+f fullscreen toggle
 bindsym $alt+Shift+f floating toggle
-bindsym $alt+x exec dunstctl close-all
-bindsym $alt+Shift+x exec dunstctl history-pop
+bindsym $alt+x exec makoctl dismiss -a
+bindsym $alt+Shift+x exec makoctl restore
 bindsym $alt+b workspace back_and_forth
 bindsym $alt+n workspace next
 bindsym $super+return exec $browser
