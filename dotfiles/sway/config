@@ -4,15 +4,14 @@ set $super mod4
 set $font IBM Plex Mono
 set $fontsize 10
 set $term alacritty
-set $browser firefox
-set $lockscreen 'swaylock -u -c 282828 -i $HOME/.config/sway/lockscreen.png'
+set $menu "dmenu_run -nf '#FFFFFF' -nb '#000000' -sb '#FFFFFF' -sf '#000000' -fn '$font-$fontsize' -p ''"
+set $lock 'swaylock -u -f -c 282828 -i $HOME/.config/sway/lockscreen.png'
+set $screenoff 'swaymsg "output * dpms off"'
+set $screenon 'swaymsg "output * dpms off"'
 
 ### STARTUP ###
 exec dunst
-exec swayidle -w \
-    timeout 300 $lockscreen \
-    timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
-    before-sleep $lockscreen
+exec swayidle -w timeout 300 $lock timeout 600 $screenoff resume $screenon before-sleep $lock
 
 ### SETTINGS ###
 default_border pixel 4
@@ -27,13 +26,13 @@ assign [app_id="term"] 2:tty
 assign [app_id="mail"] mail
 assign [app_id="Slack"] slack
 assign [app_id="Code"] code
-exec --no-startup-id $browser
+exec --no-startup-id firefox
 exec --no-startup-id $term --class term -e tmux attach
 #exec --no-startup-id slack
 #exec --no-startup-id code
 
 ### KEYBINDS ###
-bindsym $alt+q kill
+bindsym $alt+shift+q kill
 bindsym $alt+w workspace 1:web
 bindsym $alt+e workspace 2:tty
 bindsym $alt+shift+r reload
@@ -41,10 +40,10 @@ bindsym $alt+t layout toggle tabbed split
 bindsym $alt+i resize grow width 5 px or 5 ppt
 bindsym $alt+shift+I resize shrink width 5 px or 5 ppt
 bindsym $alt+p workspace prev
+bindsym $alt+o exec $menu
 # bindsym $alt+s workspace slack
 bindsym $alt+shift+s floating on; fullscreen disable; sticky toggle
 # bindsym $alt+a workspace code
-bindsym $alt+d exec "dmenu_run -nf '#FFFFFF' -nb '#000000' -sb '#FFFFFF' -sf '#000000' -fn '$font-$fontsize' -p ''"
 bindsym $alt+f fullscreen toggle
 bindsym $alt+Shift+f floating toggle
 bindsym $alt+x exec dunstctl close-all
@@ -93,8 +92,8 @@ bindsym $alt+BackSpace mode "$powermenu"
 set $powermenu << SYSTEM >> (L)OCK (E)XIT (H)IBERNATE (R)EBOOT (S)HUTDOWN
 mode "$powermenu" {
     bindsym e exec --no-startup-id swaymsg 'exit' && exit, mode "default"
-    bindsym l exec --no-startup-id $lockscreen, mode "default"
-    bindsym h exec --no-startup-id $lockscreen && systemctl hibernate, mode "default"
+    bindsym l exec --no-startup-id $lock, mode "default"
+    bindsym h exec --no-startup-id $lock && systemctl hibernate, mode "default"
     bindsym r exec --no-startup-id shutdown now -r, mode "default"
     bindsym s exec --no-startup-id shutdown now, mode "default"
     bindsym Return mode "default"
