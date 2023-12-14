@@ -3,8 +3,10 @@
 ~/.local/share
 ~/.ssh
 ~/captures
-~/downloads
-~/mail
 ~/code
+~/downloads
+~/docs
+~/mail
+~/papers
 ~/work
 
