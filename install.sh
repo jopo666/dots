@@ -28,4 +28,12 @@ while ifs= read -r line; do
         package=$(echo "$line" | awk '{print $1}')
         ./bin/pget $package
     fi
-done < "packages.txt"
+done < "./packages/nix.txt"
+
+echo ":: Install following packages manually.."
+while ifs= read -r line; do
+  if [[ -n "$line" && "$line" != \#* ]]; then
+    package=$(echo "$line" | awk '{print $1}')
+    echo $package
+  fi
+done < "./packages/snap.txt"

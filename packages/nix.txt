@@ -1,29 +1,12 @@
-### MANUAL ###
-alacritty
-firefox
-# chrome
-# slack
-
-### OS ###
-# bash
-# docker
-# git
-# sway
-# zsh
-
-### CLI ###
 bat
 brightnessctl
 dmenu
-fd
 fzf
 glow
 htop
 i3status-rust
-jq
 lazydocker
 lazygit
-lf
 mako
 neovim
 pass
