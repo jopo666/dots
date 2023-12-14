@@ -1,3 +1,5 @@
+#!/bin/sh
+
 set -euo pipefail
 
 echo ":: Creating directories..."
