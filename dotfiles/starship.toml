@@ -14,12 +14,12 @@ truncation_length = 3
 truncate_to_repo = false
 
 [git_branch]
-format = '$branch'
+format = '\[$branch'
 style = 'bold bright-white'
 truncation_length = 30
 
 [git_status]
-format = ' \[$staged$conflicted$modified$deleted$renamed$untracked$ahead_behind\]'
+format = ' $staged$conflicted$modified$deleted$renamed$untracked$ahead_behind\]'
 conflicted = '!'
 modified = 'x'
 untracked = '?'
@@ -32,6 +32,7 @@ behind = '⇣${count}'
 up_to_date = '✓'
 
 [git_commit]
+format = '\[$hash '
 style = "bright-white"
 
 [git_state]
