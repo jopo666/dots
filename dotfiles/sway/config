@@ -12,6 +12,9 @@ set $screenon 'swaymsg "output * dpms off"'
 ### STARTUP ###
 exec mako
 exec swayidle -w timeout 300 $lock timeout 600 $screenoff resume $screenon before-sleep $lock
+# Hide mouse cursor after a period of inactivity.
+seat seat0 hide_cursor 3000
+seat * hide_cursor when-typing enable
 
 ### SETTINGS ###
 default_border pixel 4
@@ -108,7 +111,6 @@ input type:keyboard {
         repeat_delay 250
         repeat_rate 100
 }
-
 
 ### COLORS ###
 #                       border  bground text    indicator child_border
