@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 set -euo pipefail
 
@@ -12,7 +12,7 @@ fi
 
 # Get already installed packages and their indices.
 index=0
-INSTALLED=$(nix profile list --json | jq '.elements[].attrPath' | while IFS= read -r line; do
+INSTALLED=$(cat /home/jopo/.nix-profile/manifest.json | jq '.elements[].attrPath' | while IFS= read -r line; do
   attrPath=$(echo "$line" | cut -d. -f3-)
   echo "$index :: $attrPath"
   index=$((index+1))
