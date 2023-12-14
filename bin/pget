@@ -1,9 +1,10 @@
-#!/bin/sh
+#!/bin/bash
 set -euo pipefail
 
 USAGE="Usage: $0 [package]"
 PACKAGE="";
 INSTALLED="";
+MANIFEST="$HOME/.nix-profile/manifest.json"
 while [[ $# -gt 0 ]]; do
   case $1 in
     -h|--help) echo $USAGE; exit 1; ;;
@@ -18,9 +19,9 @@ fi
 
 install() {
   local name=$1
-  if [ -z "$INSTALLED" ]; then
+  if [[ -z "$INSTALLED" && -f $MANIFEST ]]; then
     index=0
-    INSTALLED=$(cat /home/jopo/.nix-profile/manifest.json | jq '.elements[].attrPath' | while IFS= read -r line; do
+    INSTALLED=$(cat $MANIFEST | jq '.elements[].attrPath' | while IFS= read -r line; do
       attrPath=$(echo "$line" | cut -d. -f3-)
       echo "$index :: $attrPath"
       index=$((index+1))
@@ -35,7 +36,7 @@ install() {
 }
 
 if [ ! -z "$PACKAGE" ]; then
-install $PACKAGE
+  install $PACKAGE
 else
   while ifs= read -r line; do
     if [[ -n "$line" && "$line" != \#* ]]; then

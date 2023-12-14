@@ -1,9 +1,9 @@
-#!/bin/sh
-
+#!/bin/bash
 set -euo pipefail
 
 USAGE="Usage: $0 [package]"
 PACKAGE=""
+MANIFEST="$HOME/.nix-profile/manifest.json"
 if [ $# -ge 2 ]; then
   echo $USAGE; exit 1;
 elif [ $# -eq 1 ]; then
@@ -11,12 +11,17 @@ elif [ $# -eq 1 ]; then
 fi
 
 # Get already installed packages and their indices.
-index=0
-INSTALLED=$(cat /home/jopo/.nix-profile/manifest.json | jq '.elements[].attrPath' | while IFS= read -r line; do
-  attrPath=$(echo "$line" | cut -d. -f3-)
-  echo "$index :: $attrPath"
-  index=$((index+1))
-done)
+if [[ -f $MANIFEST ]]; then
+  index=0
+  INSTALLED=$(cat /home/jopo/.nix-profile/manifest.json | jq '.elements[].attrPath' | while IFS= read -r line; do
+    attrPath=$(echo "$line" | cut -d. -f3- | sed 's/"$//')
+    echo "$index :: $attrPath"
+    index=$((index+1))
+  done)
+else
+  echo "No packages installed!"
+  exit 0;
+fi
 
 # Select packages and remove em'.
 if [ -z "$PACKAGE" ]; then
