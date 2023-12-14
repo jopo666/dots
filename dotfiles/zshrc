@@ -1,5 +1,5 @@
 # PATH
-export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$HOME/work/scripts:$PATH"
+export PATH="$HOME/.local/bin:$HOME/.nix-profile/bin:$HOME/.cargo/bin:$HOME/work/scripts:$PATH"
 
 # EXPORTS
 export EDITOR="nvim"
