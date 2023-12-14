@@ -8,6 +8,6 @@
 ~/dots/dotfiles/ssh_config => ~/.ssh/config
 ~/dots/dotfiles/starship.toml => ~/.config/starship.toml
 ~/dots/dotfiles/sway => ~/.config/sway
-~/dots/dotfiles/tmux => ~/.tmux.conf
+~/dots/dotfiles/tmux.conf => ~/.tmux.conf
 ~/dots/dotfiles/zshrc => ~/.zshrc
 ~/dots/share/fonts => ~/.local/share/fonts
