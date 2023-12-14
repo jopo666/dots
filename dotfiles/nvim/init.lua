@@ -42,7 +42,7 @@ vim.cmd [[ au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe
 
 -- KEYMAPS --
 vim.keymap.set('i', 'jk', '<esc>')
-vim.keymap.set('n', 'q:', '<nop>')
+vim.keymap.set({'n', 'x'}, 'q:', '<nop>')
 vim.keymap.set('x', '>', '>gv')
 vim.keymap.set('x', '<', '<gv')
 vim.keymap.set('n', '<c-d>', '<c-d>zz')
