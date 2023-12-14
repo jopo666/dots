@@ -1,14 +1,13 @@
 ~/dots/bin => ~/.local/bin
 ~/dots/dotfiles/alacritty.yml => ~/.alacritty.yml
-~/dots/dotfiles/dunst => ~/.config/dunst
 ~/dots/dotfiles/git => ~/.config/git
-~/dots/dotfiles/lf => ~/.config/lf
+~/dots/dotfiles/mako => ~/.config/mako
 ~/dots/dotfiles/nix => ~/.config/nix
 ~/dots/dotfiles/nixpkgs => ~/.config/nixpkgs
 ~/dots/dotfiles/nvim => ~/.config/nvim
 ~/dots/dotfiles/ssh_config => ~/.ssh/config
 ~/dots/dotfiles/starship.toml => ~/.config/starship.toml
 ~/dots/dotfiles/sway => ~/.config/sway
-~/dots/dotfiles/tmux.conf => ~/.tmux.conf
+~/dots/dotfiles/tmux => ~/.tmux.conf
 ~/dots/dotfiles/zshrc => ~/.zshrc
 ~/dots/share/fonts => ~/.local/share/fonts
