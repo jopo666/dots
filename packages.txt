@@ -1,7 +1,7 @@
 ### MANUAL ###
-# alacritty
+alacritty
+firefox
 # chrome
-# firefox
 # slack
 
 ### OS ###
@@ -28,7 +28,8 @@ mako
 neovim
 pass
 pulsemixer
-python312
+python311
+python311Packages.pip
 ripgrep
 rm-improved
 rustup
@@ -39,5 +40,6 @@ tree
 unzip
 wget
 wl-clipboard
+zig
 zip
 zoxide
