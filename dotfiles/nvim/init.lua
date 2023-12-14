@@ -1,5 +1,8 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
+vim.g.netrw_keepdir = 0
+vim.g.netrw_liststyle = 0
+vim.g.netrw_use_errorwindow = 2
 
 -- OPTIONS --
 vim.opt.breakindent = true
@@ -40,10 +43,8 @@ vim.cmd [[
 
 -- KEYMAPS --
 vim.keymap.set('n', 'Q', '<nop>')
-vim.keymap.set('c', 'w!', ':w !sudo -A tee %')
 vim.keymap.set('x', '>', '>gv')
 vim.keymap.set('x', '<', '<gv')
-vim.keymap.set('n', '<cr>', 'o<esc>')
 vim.keymap.set('n', '<tab>', '<cmd>bn<cr>')
 vim.keymap.set('n', '<s-tab>', '<cmd>bp<cr>')
 -- move visual lines.
@@ -107,14 +108,7 @@ require('lazy').setup({
   { 'tpope/vim-commentary' },
   { 'tpope/vim-sleuth' },
   { 'tpope/vim-vinegar' },
-  { 'folke/neodev.nvim',   opts = {} },
-  {
-    "ellisonleao/gruvbox.nvim",
-    priority = 1000,
-    config = function()
-      vim.cmd.colorscheme 'default'
-    end,
-  },
+  { 'folke/neodev.nvim', opts = {} },
   {
     'nvim-lualine/lualine.nvim',
     opts = {
@@ -337,7 +331,7 @@ require('lazy').setup({
     },
     build = ':TSUpdate',
     opt = {
-      ensure_installed = { 'c', 'lua', 'markdown', 'markdown_inline', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash' },
+      auto_install = true,
       indent = { enable = true },
       highlight = { enable = true },
       textobjects = {
