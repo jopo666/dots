@@ -76,13 +76,13 @@ setopt SHARE_HISTORY
 
 # KEYBINDS
 set KEYTIMEOUT=1
-bindkey -s "^k" "kill **\t" # fzf: kill process
+bindkey -s "^x" "kill **\t" # fzf: kill process
 bindkey -s "^f" "^t"        # fzf: find file
 bindkey -s "^d" "^[c"       # fzf: cd to dir
-bindkey ";5C" forward-word
-bindkey "5C" forward-word
-bindkey ";5D" backward-word
-bindkey "5D" backward-word
+bindkey "^P" up-line-or-search
+bindkey "^N" down-line-or-search
+bindkey "^J" backward-word
+bindkey "^K" forward-word
 
 # COMPLETIONS
 autoload compinit && compinit
@@ -106,19 +106,6 @@ antigen bundle ssh-agent
 antigen bundle zsh-users/zsh-completions
 antigen bundle zsh-users/zsh-autosuggestions
 antigen apply
-
-# COMPLETIONS
-autoload compinit && compinit
-zstyle ':completion:*' menu select
-zstyle ':completion:*' complete true
-zstyle ':completion:*' complete-options true
-zstyle ':completion:*' use-cache on
-zmodload zsh/complist
-
-bindkey -M menuselect 'h' vi-backward-char
-bindkey -M menuselect 'k' vi-up-line-or-history
-bindkey -M menuselect 'l' vi-forward-char
-bindkey -M menuselect 'j' vi-down-line-or-history
 
 # INITIALIZATIONS
 eval "$(zoxide init zsh)"
