@@ -5,7 +5,6 @@ window:
 font:
   normal:
     family: IBM Plex Mono
-    #family: BigBlueTermPlus Nerd Font
     style: Regular
   size: 10
 bell:
