@@ -1,5 +1,0 @@
-#!/bin/bash
-
-resolution=$(xrandr | awk '{print $8$9$10}' | head -n 1 | head -c -2)
-xrandr --output HDMI-1 --same-as eDP-1 --mode $resolution
-
