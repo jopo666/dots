@@ -22,7 +22,6 @@ tmux
 tree
 unzip
 wget
-wl-clipboard
 zig
 zip
 zoxide

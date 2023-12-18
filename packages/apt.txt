@@ -1,0 +1,8 @@
+bash
+curl
+git
+sway
+swaybg
+swayidle
+wl-clipboard
+zsh

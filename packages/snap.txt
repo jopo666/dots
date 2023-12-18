@@ -1,5 +1,4 @@
 alacritty
 firefox
-chrome
-slack
-sway
+#chrome
+#slack
