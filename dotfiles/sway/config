@@ -123,7 +123,7 @@ client.background       #FFFFFF
 
 bar {
     font pango:$font $fontsize
-    status_command i3status-rs $HOME/.config/sway/statusbar.toml
+    status_command i3status-rs /home/jopo/dots/dotfiles/statusbar.toml
     position bottom
     mode dock
     strip_workspace_numbers yes
