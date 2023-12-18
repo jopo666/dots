@@ -1,14 +1,15 @@
 # Dotfiles
 
-Bootstrapping everything on ubuntu.
+Prepare everyting on Ubuntu.
 
 ```sh
-# install nix for package management
+sudo update && sudo upgrade
+sudo chsh jopo -s zsh
 sh <(curl -L https://nixos.org/nix/install) --daemon
-nix-shell -p nixpkgs#jq
-# pull dotfiles
-git clone https://github.com/jopo666/dots
-cd dots
-./install.sh
-exit
+```
+
+Bootstrap dotfiles.
+
+```sh
+bash install.sh
 ```
