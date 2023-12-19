@@ -19,12 +19,12 @@ while IFS= read -r line; do
 done < "links.txt"
 
 echo ":: Installing packages [APT] ::"
-sudo apt install $(cat packages/apt.txt | sed 's/#.*//' | tr "\n" " ")
+sudo apt install $(cat packages/apt.txt | sed 's/#.*//' | tr "\n" " ") -y
 
 echo ":: Installing packages [SNAP] ::"
 while ifs= read -r package; do
   if [[ -n "$package" && "$package" != \#* ]]; then
-    sudo snap install $package
+    sudo snap install $package --classic
   fi
 done < "./packages/snap.txt"
 
