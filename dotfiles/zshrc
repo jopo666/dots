@@ -7,11 +7,12 @@ export DOTFILES="$HOME/dots"
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_CACHE_HOME="$HOME/.cache"
+export XWAYLAND_NO_GLAMOR=1         # stop xwayland flikers
+export WLR_NO_HARDWARE_CURSORS=1    # show cursors
 
 # ALIASES
 alias v="nvim"
 alias vd="nvim ."
-alias vi="nvim"
 alias vim="nvim"
 alias lg="lazygit"
 alias lzd="lazydocker"
