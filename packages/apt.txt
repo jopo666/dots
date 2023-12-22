@@ -4,5 +4,6 @@ git
 sway
 swaybg
 swayidle
+swaylock
 wl-clipboard
 zsh
