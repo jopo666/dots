@@ -1,0 +1,37 @@
+[[block]]
+block = "keyboard_layout"
+driver = "sway"
+[block.mappings]
+"English (US)" = ""
+
+[[block]]
+block = "bluetooth"
+mac = "00:18:09:92:1B:BA"
+disconnected_format = ""
+format = " $icon "
+
+[[block]]
+block = "sound"
+format = " $icon "
+[icons.overrides]
+volume = [
+    "VOL 0%",
+    "VOL 25%",
+    "VOL 50%",
+    "VOL 75%",
+    "VOL 100%",
+]
+volume_muted = "MUTED"
+
+[[block]]
+block = "battery"
+format = " $icon $percentage "
+full_format = " $icon FULL "
+empty_format = " $icon EMPTY "
+missing_format = " $icon MISSING "
+
+[[block]]
+block = "time"
+interval = 5
+format = " $timestamp.datetime(f:'%a %d/%m  %R') "
+
