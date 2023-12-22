@@ -2,15 +2,20 @@
 
 Prepare everyting on Ubuntu.
 
-```sh
-sudo update && sudo upgrade
+```bash
+# Change shell to zsh.
+sudo apt update && sudo apt update
 sudo chsh jopo -s zsh
-sh <(curl -L https://nixos.org/nix/install) --daemon
+
+# Download homebrew and it's dependencies
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+sudo apt-get install build-essential
+brew install gcc
 ```
 
 Bootstrap dotfiles.
 
-```sh
+```bash
 bash install.sh
 ```
 
@@ -28,4 +33,3 @@ ssh-keygen -t ed25519 -C "email@here.com" -f .ssh/github
 # After adding the ssh key to github.
 git remote set-url origin git@github.com:jopo666/dots.git
 ```
-
