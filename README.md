@@ -21,3 +21,11 @@ toolkit.legacyUserProfileCustomizations.stylesheets true
 ui.key.menuAccessKeyFocuses false
 ```
 
+And then generate your SSH keys and change at least the origin of this repo.
+
+```bash
+ssh-keygen -t ed25519 -C "email@here.com" -f .ssh/github
+# After adding the ssh key to github.
+git remote set-url origin git@github.com:jopo666/dots.git
+```
+
