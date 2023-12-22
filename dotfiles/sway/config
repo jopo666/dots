@@ -121,7 +121,7 @@ client.background       #FFFFFF
 
 bar {
     font pango:$font $fontsize
-    status_command i3status-rs
+    status_command swaybar
     position bottom
     mode dock
     strip_workspace_numbers yes
