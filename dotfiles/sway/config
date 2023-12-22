@@ -3,7 +3,6 @@ set $alt mod1
 set $super mod4
 set $font IBM Plex Mono
 set $fontsize 10
-set $term alacritty
 set $menu "dmenu_run -nf '#FFFFFF' -nb '#000000' -sb '#FFFFFF' -sf '#000000' -fn '$font-$fontsize' -p ''"
 set $lock 'swaylock -u -f -c 282828 -i $HOME/.config/sway/lockscreen.png'
 set $screenoff 'swaymsg "output * dpms off"'
@@ -26,16 +25,16 @@ workspace_auto_back_and_forth no
 ### WORKSPACES ###
 assign [app_id="firefox"] 1:web
 assign [app_id="term"] 2:tty
+assign [class="Code"] 3:code
+assign [class="Slack"] 4:slack
 assign [app_id="mail"] mail
-assign [app_id="Slack"] slack
-assign [app_id="Code"] code
 exec --no-startup-id firefox
-exec --no-startup-id $term --class term -e tmux attach
-#exec --no-startup-id slack
-#exec --no-startup-id code
+exec --no-startup-id alacritty --class term -e tmux attach
+exec --no-startup-id slack
+exec --no-startup-id code
 
 ### KEYBINDS ###
-bindsym $alt+shift+q kill
+bindsym $alt+q kill
 bindsym $alt+w workspace 1:web
 bindsym $alt+e workspace 2:tty
 bindsym $alt+shift+r reload
@@ -43,25 +42,24 @@ bindsym $alt+t layout toggle tabbed split
 bindsym $alt+i resize grow width 5 px or 5 ppt
 bindsym $alt+shift+I resize shrink width 5 px or 5 ppt
 bindsym $alt+p workspace prev
-bindsym $alt+o exec $menu
-# bindsym $alt+s workspace slack
+bindsym $alt+a workspace 3:code
+bindsym $alt+s workspace 4:slack
 bindsym $alt+shift+s floating on; fullscreen disable; sticky toggle
-# bindsym $alt+a workspace code
+bindsym $alt+d exec $menu
 bindsym $alt+f fullscreen toggle
 bindsym $alt+Shift+f floating toggle
 bindsym $alt+x exec makoctl dismiss -a
 bindsym $alt+Shift+x exec makoctl restore
+bindsym $alt+shift+v exec --no-startup-id pulsemixer --change-volume -20
+bindsym $alt+ctrl+v exec --no-startup-id pulsemixer --change-volume +20
 bindsym $alt+b workspace back_and_forth
+bindsym $alt+shift+b exec brightnessctl s 5%-
+bindsym $alt+ctrl+b exec brightnessctl s 5%+
 bindsym $alt+n workspace next
-bindsym $super+return exec $browser
-bindsym $alt+return exec $term
+bindsym $alt+shift+m exec --no-startup-id pulsemixer --toggle-mute
+bindsym $super+return exec firefox
+bindsym $alt+return exec alacritty --class term -e tmux attach
 bindsym $alt+space exec swaymsg input type:keyboard xkb_switch_layout next
-bindsym XF86MonBrightnessUp exec brightnessctl s 10%+
-bindsym XF86MonBrightnessDown exec brightnessctl s 10%-
-bindsym XF86AudioRaiseVolume exec --no-startup-id pulsemixer --change-volume +25
-bindsym XF86AudioLowerVolume exec --no-startup-id pulsemixer --change-volume -25
-bindsym XF86AudioMute exec --no-startup-id pulsemixer --toggle-mute
-bindsym XF86AudioMicMute exec --no-startup-id amixer set Capture toggle
 
 bindsym $alt+h focus left
 bindsym $alt+j focus down
@@ -123,7 +121,7 @@ client.background       #FFFFFF
 
 bar {
     font pango:$font $fontsize
-    status_command i3status-rs /home/jopo/dots/dotfiles/statusbar.toml
+    status_command i3status-rs
     position bottom
     mode dock
     strip_workspace_numbers yes
