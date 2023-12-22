@@ -95,7 +95,9 @@ require('lazy').setup({
     'nvim-lualine/lualine.nvim',
     opts = {
       options = {
-        icons_enabled = false,
+        isons_enabled = false,
+        theme = 'gruvbox',
+        isons_enabled = false,
         component_separators = '',
         section_separators = '',
       },
@@ -180,17 +182,17 @@ require('lazy').setup({
     config = function()
       pcall(require('telescope').load_extension, 'fzf')
       local tsb = require('telescope.builtin')
-      vim.keymap.set('n', '<C-p>', function() tsb.git_files({}) end, { desc = 'Search git files' })
-      vim.keymap.set('n', '<leader>/', function() tsb.current_buffer_fuzzy_find({}) end, { desc = 'Search buffer' })
-      vim.keymap.set('n', '<leader><space>b', function() tsb.buffers({}) end, { desc = 'Search buffers' })
-      vim.keymap.set('n', '<leader><space>d', function() tsb.diagnostics({}) end, { desc = 'Search diagnostics' })
-      vim.keymap.set('n', '<leader><space>f', function() tsb.find_files({}) end, { desc = 'Search files' })
-      vim.keymap.set('n', '<leader><space>g', function() tsb.live_grep({}) end, { desc = 'Search by grep' })
-      vim.keymap.set('n', '<leader><space>s', function() tsb.spell_suggest({}) end, { desc = 'Search spell suggestions' })
+      vim.keymap.set('n', '<C-p>', tsb.git_files, { desc = 'Search git files' })
+      vim.keymap.set('n', '<leader>/', tsb.current_buffer_fuzzy_find, { desc = 'Search buffer' })
+      vim.keymap.set('n', '<leader><space>b', tsb.buffers, { desc = 'Search buffers' })
+      vim.keymap.set('n', '<leader><space>d', tsb.diagnostics, { desc = 'Search diagnostics' })
+      vim.keymap.set('n', '<leader><space>f', tsb.find_files, { desc = 'Search files' })
+      vim.keymap.set('n', '<leader><space>g', tsb.live_grep, { desc = 'Search by grep' })
+      vim.keymap.set('n', '<leader><space>s', tsb.spell_suggest, { desc = 'Search spell suggestions' })
       vim.keymap.set('n', '<leader><space>c', function() tsb.colorscheme({enable_preview = true}) end, { desc = 'Search colorscheme' })
-      vim.keymap.set('n', '<leader><space>h', function() tsb.help_tags({}) end, { desc = 'Search help' })
-      vim.keymap.set('n', '<leader><space>r', function() tsb.oldfiles({}) end, { desc = 'Search recent files' })
-      vim.keymap.set('n', '<leader><space>o', function() tsb.vim_options({}) end, { desc = 'Search vim options' })
+      vim.keymap.set('n', '<leader><space>h', tsb.help_tags, { desc = 'Search help' })
+      vim.keymap.set('n', '<leader><space>r', tsb.oldfiles, { desc = 'Search recent files' })
+      vim.keymap.set('n', '<leader><space>o', tsb.vim_options, { desc = 'Search vim options' })
     end
   },
   -- LSP configuration.
@@ -351,3 +353,4 @@ require('lazy').setup({
     }
   },
 }, {})
+

@@ -13,7 +13,7 @@
   /*  The distance the Statuspanel floats
    *  away from the window border
    *  0 places directly in the corner
-   */ --uc-status-panel-spacing: 12px;
+   */ --uc-status-panel-spacing: 0px;
 
 }
 
@@ -25,7 +25,7 @@
 #pageActionButton { display: none !important; }
 
 #PanelUI-menu-button { padding: 0px !important; }
-#PanelUI-menu-button .toolbarbutton-icon { width: 1px !important; }
+#PanelUI-menu-button .toolbarbutton-icon { width: 0px !important; }
 #PanelUI-menu-button .toolbarbutton-badge-stack { padding: 0px !important; }
 
 
@@ -69,14 +69,14 @@
   /*  Width of the URL Bar for the Oneline layout
    *  If enabled the max-width is applied on focus
    *  otherwise the URL Bar will always be it's min-width
-   */ --uc-urlbar-min-width: 30vw;
-      --uc-urlbar-max-width: 30vw;
+   */ --uc-urlbar-min-width: 25vw;
+      --uc-urlbar-max-width: 25vw;
 
   /*  Position of the URL Bar
    *  possible values:
    *  1 – tabs on the right
    *  3 – tabs on the left
-   */ --uc-urlbar-position: 1;
+   */ --uc-urlbar-position: 3;
 
   /*  Firefox can be a little wonky with the vertical
    *  URL Bar placement. Change this variable to adapt
@@ -100,7 +100,7 @@
   #identity-box { display: none !important }
 
 /* Hide everything BUT the zoom indicator within the URL Bar */
-/* #page-action-buttons > :not(#urlbar-zoom-button) { display: none !important; } */
+#page-action-buttons > :not(#urlbar-zoom-button) { display: none !important; }
 
 /* Hide the »Go«-arrow in the URL Bar */
 #urlbar-go-button { display: none !important; }

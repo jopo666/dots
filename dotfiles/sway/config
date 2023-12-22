@@ -7,7 +7,7 @@ set $term alacritty
 set $menu "dmenu_run -nf '#FFFFFF' -nb '#000000' -sb '#FFFFFF' -sf '#000000' -fn '$font-$fontsize' -p ''"
 set $lock 'swaylock -u -f -c 282828 -i $HOME/.config/sway/lockscreen.png'
 set $screenoff 'swaymsg "output * dpms off"'
-set $screenon 'swaymsg "output * dpms off"'
+set $screenon 'swaymsg "output * dpms on"'
 
 ### STARTUP ###
 exec mako
