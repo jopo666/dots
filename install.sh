@@ -28,9 +28,9 @@ while ifs= read -r package; do
   fi
 done < "./packages/snap.txt"
 
-echo ":: Installing packages [NIX] ::"
+echo ":: Installing packages [BREW] ::"
 while ifs= read -r package; do
   if [[ -n "$package" && "$package" != \#* ]]; then
-    ./bin/pget $package
+    brew install $package
   fi
-done < "./packages/nix.txt"
+done < "./packages/brew.txt"
