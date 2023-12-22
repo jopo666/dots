@@ -1,4 +1,4 @@
-~/dots/bin => ~/.local/bin
+~/dots/bin/* => ~/.local/bin/
 ~/dots/dotfiles/alacritty.yml => ~/.alacritty.yml
 ~/dots/dotfiles/git => ~/.config/git
 ~/dots/dotfiles/i3status-rust => ~/.config/i3status-rust
