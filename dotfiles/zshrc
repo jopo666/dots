@@ -1,15 +1,3 @@
-# PATH
-export PATH="$HOME/.local/bin:$HOME/.nix-profile/bin:$HOME/.cargo/bin:$HOME/work/scripts:$PATH"
-
-# EXPORTS
-export EDITOR="nvim"
-export DOTFILES="$HOME/dots"
-export XDG_CONFIG_HOME="$HOME/.config"
-export XDG_DATA_HOME="$HOME/.local/share"
-export XDG_CACHE_HOME="$HOME/.cache"
-export XWAYLAND_NO_GLAMOR=1         # stop xwayland flikers
-export WLR_NO_HARDWARE_CURSORS=1    # show cursors
-
 # ALIASES
 alias v="nvim"
 alias vd="nvim ."
@@ -102,6 +90,11 @@ bindkey -M menuselect 'j' vi-down-line-or-history
 # TMUX
 tmux new -d -s scratch 2> /dev/null
 
+# INITIALIZATIONS
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+eval "$(zoxide init zsh)"
+eval "$(starship init zsh)"
+
 # PLUGINS
 source $DOTFILES/dotfiles/antigen.zsh
 antigen bundle fzf
@@ -110,6 +103,3 @@ antigen bundle zsh-users/zsh-completions
 antigen bundle zsh-users/zsh-autosuggestions
 antigen apply
 
-# INITIALIZATIONS
-eval "$(zoxide init zsh)"
-eval "$(starship init zsh)"
