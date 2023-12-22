@@ -41,8 +41,10 @@ vim.cmd [[ autocmd BufWritePre * :%s/\s\+$//e ]]
 vim.cmd [[ au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif ]]
 
 -- KEYMAPS --
+vim.keymap.set('i', '<esc>', '<esc>')
 vim.keymap.set('i', 'jk', '<esc>')
-vim.keymap.set({'n', 'x'}, 'q:', '<nop>')
+vim.keymap.set('i', 'kj', '<esc>')
+vim.keymap.set({ 'n', 'x' }, 'q:', '<nop>')
 vim.keymap.set('x', '>', '>gv')
 vim.keymap.set('x', '<', '<gv')
 vim.keymap.set('n', '<c-d>', '<c-d>zz')
@@ -69,8 +71,10 @@ vim.keymap.set('n', '<c-down>', '<cmd>cnext<cr>')
 vim.keymap.set('n', '<tab>', '<cmd>bn<cr>')
 vim.keymap.set('n', '<s-tab>', '<cmd>bp<cr>')
 -- leader keys
+vim.keymap.set('n', '<leader>w', '<cmd>w<cr>', { desc = 'Write buffer' })
+vim.keymap.set('n', '<leader>q', '<cmd>q<cr>', { desc = 'Quit buffer' })
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show error' })
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Show diagnostics' })
+vim.keymap.set('n', '<leader>E', vim.diagnostic.setloclist, { desc = 'Show diagnostics' })
 vim.keymap.set('n', '<leader>x', '<cmd>bdelete<CR>', { desc = 'Delete buffer' })
 vim.keymap.set('n', '<leader>X', '<cmd>!chmod +x %<CR>', { desc = 'Make file executable' })
 vim.keymap.set({ 'n', 'x' }, '<leader>y', '"+y', { desc = "yank to clipborad" })
@@ -90,14 +94,35 @@ require('lazy').setup({
   { 'tpope/vim-commentary' },
   { 'tpope/vim-sleuth' },
   { 'tpope/vim-vinegar' },
-  { 'folke/neodev.nvim', opts = {} },
+  { 'folke/neodev.nvim',      opts = {} },
+  { 'kyleshui/nvim-surround', opts = {} },
+  {
+    "zbirenbaum/copilot.lua",
+    opts = {
+      suggestion = {
+        auto_trigger = true,
+        keymap = {
+          accept = "<C-Space>",
+          next = "<C-]>",
+          prev = "<C-[>",
+          dismiss = "<C-x>",
+        }
+      }
+    },
+  },
+  {
+    "ellisonleao/gruvbox.nvim",
+    priority = 1000,
+    config = function()
+      vim.cmd([[colorscheme gruvbox]])
+    end,
+  },
   {
     'nvim-lualine/lualine.nvim',
     opts = {
       options = {
-        isons_enabled = false,
         theme = 'gruvbox',
-        isons_enabled = false,
+        icons_enabled = false,
         component_separators = '',
         section_separators = '',
       },
@@ -106,11 +131,8 @@ require('lazy').setup({
   {
     'ggandor/leap.nvim',
     config = function()
-      require('leap').add_default_mappings()
-      require('leap').add_repeat_mappings(';', ',', {
-        relative_directions = true,
-        modes = { 'n', 'x', 'o' },
-      })
+      vim.keymap.set("n", "S", "<Plug>(leap-backward-to)")
+      vim.keymap.set("n", "s", "<Plug>(leap-forward-to)")
     end
   },
   {
@@ -123,23 +145,12 @@ require('lazy').setup({
         triggers = {
           { mode = 'n', keys = '<leader>' },
           { mode = 'x', keys = '<leader>' },
-          { mode = 'n', keys = '<C-w>' },
-          { mode = 'x', keys = '<C-w>' },
         },
-        clues = {
-          miniclue.gen_clues.builtin_completion(),
-          miniclue.gen_clues.windows(),
-        },
-        window = {
-          delay = 0,
-          config = {
-            width = 'auto',
-          },
-        },
+        clues = { miniclue.gen_clues.builtin_completion(), },
+        window = { delay = 0, config = { width = 'auto' } },
       })
     end
   },
-  -- Git stuff.
   {
     'lewis6991/gitsigns.nvim',
     opts = {
@@ -175,7 +186,6 @@ require('lazy').setup({
       end
     },
   },
-  -- Fuzzy finder.
   {
     'nvim-telescope/telescope.nvim',
     dependencies = { 'nvim-lua/plenary.nvim' },
@@ -189,110 +199,69 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader><space>f', tsb.find_files, { desc = 'Search files' })
       vim.keymap.set('n', '<leader><space>g', tsb.live_grep, { desc = 'Search by grep' })
       vim.keymap.set('n', '<leader><space>s', tsb.spell_suggest, { desc = 'Search spell suggestions' })
-      vim.keymap.set('n', '<leader><space>c', function() tsb.colorscheme({enable_preview = true}) end, { desc = 'Search colorscheme' })
+      vim.keymap.set('n', '<leader><space>c', function() tsb.colorscheme({ enable_preview = true }) end,
+        { desc = 'Search colorscheme' })
       vim.keymap.set('n', '<leader><space>h', tsb.help_tags, { desc = 'Search help' })
       vim.keymap.set('n', '<leader><space>r', tsb.oldfiles, { desc = 'Search recent files' })
       vim.keymap.set('n', '<leader><space>o', tsb.vim_options, { desc = 'Search vim options' })
     end
   },
-  -- LSP configuration.
   {
-    'neovim/nvim-lspconfig',
+    'VonHeikemen/lsp-zero.nvim',
+    branch = 'v3.x',
     dependencies = {
-      { 'williamboman/mason.nvim',           opts = {} },
-      { 'williamboman/mason-lspconfig.nvim', opts = {} },
-    },
-    config = function()
-      local on_attach = function(_, bufnr)
-        local tsb = require('telescope.builtin')
-        vim.keymap.set('n', 'K', vim.lsp.buf.hover, { buffer = bufnr })
-        vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, { buffer = bufnr })
-        vim.keymap.set('n', '<leader>a', vim.lsp.buf.code_action, { buffer = bufnr, desc = 'Code action' })
-        vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename, { buffer = bufnr, desc = 'Rename variable' })
-        vim.keymap.set('n', '<leader>f', vim.lsp.buf.format, { buffer = bufnr, desc = 'Rename variable' })
-        vim.keymap.set('n', 'gr', vim.lsp.buf.references, { buffer = bufnr, desc = 'LSP: References' })
-        vim.keymap.set('n', 'gd', tsb.lsp_definitions, { buffer = bufnr, desc = 'LSP: Definition' })
-        vim.keymap.set('n', 'gI', tsb.lsp_implementations, { buffer = bufnr, desc = 'LSP: Implementations' })
-      end
-      -- Define lsp servers
-      local servers = {
-        lua_ls = {},
-        rust_analyzer = {},
-      }
-      -- Setup neovim lua configuration
-      require('neodev').setup()
-      -- Ensure the servers above are installed
-      local mlsp = require('mason-lspconfig')
-      mlsp.setup {
-        ensure_installed = vim.tbl_keys(servers),
-      }
-      -- Add nvim-cmp capabilities
-      local capabilities = vim.lsp.protocol.make_client_capabilities()
-      capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
-      mlsp.setup_handlers {
-        function(server_name)
-          require('lspconfig')[server_name].setup {
-            capabilities = capabilities,
-            on_attach = on_attach,
-            settings = servers[server_name],
-            filetypes = (servers[server_name] or {}).filetypes,
-          }
-        end,
-      }
-    end
-  },
-  -- Autocompletion & snippets.
-  {
-    'hrsh7th/nvim-cmp',
-    dependencies = {
+      -- LSP dependencies.
+      'neovim/nvim-lspconfig',
+      'williamboman/mason.nvim',
+      'williamboman/mason-lspconfig.nvim',
+      -- Autocompletion.
+      'hrsh7th/nvim-cmp',
       'hrsh7th/cmp-nvim-lsp',
+      -- Sources.
+      'hrsh7th/cmp-buffer',
+      'hrsh7th/cmp-path',
+      -- Snippets.
       'L3MON4D3/LuaSnip',
       'saadparwaiz1/cmp_luasnip',
       'rafamadriz/friendly-snippets',
     },
     config = function()
-      local cmp = require 'cmp'
-      local lsnip = require 'luasnip'
-      require('luasnip.loaders.from_vscode').lazy_load()
-      lsnip.config.setup {}
-      ---@diagnostic disable-next-line: missing-fields
-      cmp.setup {
-        snippet = {
-          expand = function(args)
-            lsnip.lsp_expand(args.body)
-          end,
+      local lsp_zero = require('lsp-zero')
+      -- LSP configuration
+      ---@diagnostic disable-next-line: unused-local
+      lsp_zero.on_attach(function(client, bufnr)
+        lsp_zero.default_keymaps({ buffer = bufnr })
+        vim.keymap.set('n', '<leader>a', vim.lsp.buf.code_action, { buffer = bufnr, desc = 'Code action' })
+        vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename, { buffer = bufnr, desc = 'Rename variable' })
+        vim.keymap.set('n', '<leader>f', vim.lsp.buf.format, { buffer = bufnr, desc = 'Format document' })
+        vim.keymap.set('n', 'gr', vim.lsp.buf.references, { buffer = bufnr, desc = 'LSP: References' })
+      end)
+      -- LSP servers.
+      require('mason').setup({})
+      require('mason-lspconfig').setup({
+        ensure_installed = { 'lua_ls', 'tsserver', 'rust_analyzer' },
+        handlers = {
+          lsp_zero.default_setup,
         },
-        mapping = cmp.mapping.preset.insert {
-          ['<C-d>'] = cmp.mapping.scroll_docs(-4),
-          ['<C-f>'] = cmp.mapping.scroll_docs(4),
-          ['<CR>'] = cmp.mapping.confirm {
-            behavior = cmp.ConfirmBehavior.Replace,
-            select = true,
-          },
-          ['<Tab>'] = cmp.mapping(function(fallback)
-            if cmp.visible() then
-              cmp.select_next_item()
-            elseif lsnip.expand_or_locally_jumpable() then
-              lsnip.expand_or_jump()
-            else
-              fallback()
-            end
-          end, { 'i', 's' }),
-          ['<S-Tab>'] = cmp.mapping(function(fallback)
-            if cmp.visible() then
-              cmp.select_prev_item()
-            elseif lsnip.locally_jumpable(-1) then
-              lsnip.jump(-1)
-            else
-              fallback()
-            end
-          end, { 'i', 's' }),
-        },
+      })
+      -- Autocomplete
+      local cmp = require('cmp')
+      local cmp_action = lsp_zero.cmp_action()
+      cmp.setup({
         sources = {
           { name = 'nvim_lsp' },
           { name = 'luasnip' },
+          { name = 'buffer' },
+          { name = 'path' },
         },
-      }
+        mapping = cmp.mapping.preset.insert({
+          ['<CR>'] = cmp.mapping.confirm({ select = false }),
+          ['<Tab>'] = cmp_action.luasnip_supertab(),
+          ['<S-Tab>'] = cmp_action.luasnip_shift_supertab(),
+          ['<C-u>'] = cmp.mapping.scroll_docs(-4),
+          ['<C-d>'] = cmp.mapping.scroll_docs(4),
+        })
+      })
     end
   },
   -- Treesitter.
@@ -304,7 +273,6 @@ require('lazy').setup({
     build = ':TSUpdate',
     opt = {
       ensure_installed = { 'c', 'lua', 'markdown', 'markdown_inline', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash' },
-      auto_install = true,
       indent = { enable = true },
       highlight = { enable = true },
       textobjects = {
@@ -318,39 +286,31 @@ require('lazy').setup({
             ['if'] = '@function.inner',
             ['ac'] = '@class.outer',
             ['ic'] = '@class.inner',
+            ['as'] = '@struct.outer',
+            ['is'] = '@struct.inner',
           },
         },
         move = {
           enable = true,
           set_jumps = true,
           goto_next_start = {
-            [']m'] = '@function.outer',
-            [']]'] = '@class.outer',
+            [']f'] = '@function.outer',
+            [']m'] = '@class.outer',
           },
           goto_next_end = {
-            [']M'] = '@function.outer',
-            [']['] = '@class.outer',
+            [']F'] = '@function.outer',
+            [']M'] = '@class.outer',
           },
           goto_previous_start = {
-            ['[m'] = '@function.outer',
-            ['[['] = '@class.outer',
+            ['[f'] = '@function.outer',
+            ['[m'] = '@class.outer',
           },
           goto_previous_end = {
-            ['[M'] = '@function.outer',
-            ['[]'] = '@class.outer',
-          },
-        },
-        swap = {
-          enable = true,
-          swap_next = {
-            ['<leader>a'] = '@parameter.inner',
-          },
-          swap_previous = {
-            ['<leader>A'] = '@parameter.inner',
+            ['[F'] = '@function.outer',
+            ['[M'] = '@class.outer',
           },
         },
       },
     }
   },
 }, {})
-
