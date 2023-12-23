@@ -22,6 +22,7 @@ bash install.sh
 Next enable following settings in Firefox and copy `chrome` folder to the firefox profile.
 
 ```
+browser.tabs.closeWindowWithLastTab
 toolkit.legacyUserProfileCustomizations.stylesheets true
 ui.key.menuAccessKeyFocuses false
 ```

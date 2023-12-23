@@ -1,0 +1,37 @@
+general {
+    colors = false
+    interval = 5
+}
+
+order += "wireless _first_"
+order += "ethernet _first_"
+order += "volume master"
+order += "battery all"
+order += "tztime local"
+
+wireless _first_ {
+    format_up = " WIFI "
+    format_down = ""
+}
+
+ethernet _first_ {
+    format_up = " ETH "
+    format_down = ""
+}
+
+volume master {
+    format = " V0L %volume "
+    format_muted = " MUTED "
+    device = "default"
+    mixer = "Master"
+    mixer_idx = 0
+}
+
+battery all {
+    format = " BAT %percentage "
+    integer_battery_capacity = true
+}
+
+tztime local {
+    format = " %d/%m  %R "
+}
