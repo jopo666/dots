@@ -10,6 +10,7 @@ set $screenon 'swaymsg "output * dpms on"'
 
 ### STARTUP ###
 exec mako
+exec swaybar
 exec swayidle -w timeout 300 $lock timeout 600 $screenoff resume $screenon before-sleep $lock
 # Hide mouse cursor after a period of inactivity.
 seat seat0 hide_cursor 3000
@@ -29,7 +30,7 @@ assign [class="Code"] 3:code
 assign [class="Slack"] 4:slack
 assign [app_id="mail"] mail
 exec --no-startup-id firefox
-exec --no-startup-id alacritty --class term -e tmux attach
+exec --no-startup-id alacritty --class term -e tmux new -As scratch
 exec --no-startup-id slack
 exec --no-startup-id code
 
@@ -58,7 +59,7 @@ bindsym $alt+ctrl+b exec brightnessctl s 5%+
 bindsym $alt+n workspace next
 bindsym $alt+shift+m exec --no-startup-id pulsemixer --toggle-mute
 bindsym $super+return exec firefox
-bindsym $alt+return exec alacritty --class term -e tmux attach
+bindsym $alt+return exec alacritty -e tmux attach
 bindsym $alt+space exec swaymsg input type:keyboard xkb_switch_layout next
 
 bindsym $alt+h focus left
@@ -105,23 +106,23 @@ mode "$powermenu" {
 ### INPUT/OUTPUT ###
 input type:keyboard {
     xkb_layout us,fi
-        xkb_options ctrl:nocaps
-        repeat_delay 250
-        repeat_rate 100
+    xkb_options ctrl:nocaps
+    repeat_delay 250
+    repeat_rate 100
 }
 
 ### COLORS ###
 #                       border  bground text    indicator child_border
 client.focused          #FFFFFF #000000 #FFFFFF #FFFFFF   #FFFFFF
-client.focused_inactive #000000 #000000 #FFFFFF #000000   #000000
-client.unfocused        #000000 #000000 #FFFFFF #000000   #000000
+client.focused_inactive #000000 #000000 #FF0000 #000000   #000000
+client.unfocused        #000000 #000000 #FF0000 #000000   #000000
 client.urgent           #000000 #000000 #FF0000 #FF0000   #000000
-client.placeholder      #000000 #000000 #FFFFFF #000000   #000000
+client.placeholder      #000000 #000000 #FF0000 #000000   #000000
 client.background       #FFFFFF
 
 bar {
     font pango:$font $fontsize
-    status_command swaybar
+    status_command i3status
     position bottom
     mode dock
     strip_workspace_numbers yes

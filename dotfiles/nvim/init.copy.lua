@@ -1,77 +1,5 @@
--- LEADER --
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
-
--- OPTIONS --
-vim.g.netrw_keepdir = 0
-vim.g.netrw_preview = 1
-vim.g.netrw_use_errorwindow = 0
-vim.opt.breakindent = true -- Soft wrap keeps indent
-vim.opt.cursorline = true -- Show current line
-vim.opt.lcs = 'trail:•,tab:>-' -- Visualise whitespace
-vim.opt.list = true -- Visualise whitespace
-vim.opt.ignorecase = true -- Ignore case on search.
-vim.opt.smartcase = true -- Ignore case unless upper
-vim.opt.scrolloff = 10 -- Always show some context
-vim.opt.showmode = false -- Shown in statusline
-vim.opt.smartindent = true -- Start with corrent indenting
-vim.opt.swapfile = false -- No swapfiles
-vim.opt.timeoutlen = 200 -- Faster timeout
-vim.opt.undofile = true -- Persistent undo!
-vim.wo.number = true -- Show line numbers
-
--- KEYMAPS --
-vim.keymap.set('i', 'jk', '<esc>')
-vim.keymap.set('n', '<leader>w', '<cmd>w<cr>', { desc = 'Write buffer' })
-vim.keymap.set('n', '<leader>q', '<cmd>q<cr>', { desc = 'Quit buffer' })
-vim.keymap.set('n', '<leader>X', '<cmd>!chmod +x %<CR>', { desc = 'Make file executable' })
--- Keep selection when indenting
-vim.keymap.set('x', '>', '>gv')
-vim.keymap.set('x', '<', '<gv')
--- Center view
-vim.keymap.set('n', '<c-d>', '<c-d>zz')
-vim.keymap.set('n', '<c-u>', '<c-u>zz')
-vim.keymap.set('n', 'n', 'nzzzv')
-vim.keymap.set('n', 'N', 'Nzzzv')
--- Don't copy in visual mode
-vim.keymap.set('x', 'p', [["_dP]])
--- Go through history
-vim.keymap.set('c', '<c-p>', '<up>')
-vim.keymap.set('c', '<c-n>', '<down>')
--- Instert mode movement
-vim.keymap.set('i', '<c-e>', '<c-o>$')
-vim.keymap.set('i', '<c-a>', '<c-o>^')
-vim.keymap.set('i', '<c-k>', '<up>')
-vim.keymap.set('i', '<c-j>', '<down>')
-vim.keymap.set('i', '<c-h>', '<left>')
-vim.keymap.set('i', '<c-l>', '<right>')
--- Change buffers and skip netrw.
-vim.keymap.set('n', '<tab>', '<cmd>bn<cr>')
-vim.keymap.set('n', '<s-tab>', '<cmd>bp<cr>')
--- Yank/paste to clipboard
-vim.keymap.set('n', '<leader>y', '"+Y', { desc = "Yank to clipboard" })
-vim.keymap.set('x', '<leader>y', '"+y', { desc = "Yank to clipboard" })
-vim.keymap.set({ 'n', 'x' }, '<leader>p', '"+p', { desc = "paste from clipborad" })
-vim.keymap.set({ 'n', 'x' }, '<leader>P', '"+P', { desc = "Paste from clipborad" })
--- Quickfix window.
-vim.keymap.set('n', '<c-up>', '<cmd>cprev<cr>')
-vim.keymap.set('n', '<c-down>', '<cmd>cnext<cr>')
-vim.keymap.set('n', '<leader>x', function()
-  for _, win in pairs(vim.fn.getwininfo()) do
-    if win["quickfix"] == 1 then
-      vim.cmd "cclose"
-      return
-    end
-  end
-  vim.cmd "copen"
-end
-)
-
--- AUTOCOMMANDS --
--- Remove trailing whitespace
-vim.cmd [[ au BufWritePre * :%s/\s\+$//e ]]
--- Highlight yanks
-vim.cmd [[ au TextYankPost * silent! lua vim.highlight.on_yank() ]]
 
 -- PLUGIN MANAGER --
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
@@ -82,57 +10,19 @@ vim.opt.rtp:prepend(lazypath)
 
 -- PLUGINS --
 require('lazy').setup({
-  -- Tim Pope
   { 'tpope/vim-commentary' },
   { 'tpope/vim-sleuth' },
   { 'tpope/vim-surround' },
-  { 'tpope/vim-obsession' },
   { 'tpope/vim-unimpaired' },
   { 'tpope/vim-vinegar' },
-  -- Colorscheme
-  { 'ellisonleao/gruvbox.nvim' },
   {
-    'projekt0n/github-nvim-theme',
+    "ellisonleao/gruvbox.nvim",
     priority = 1000,
+    opts = { contrast = "hard" },
     config = function()
-      vim.cmd([[colorscheme github_dark_default]])
+      vim.cmd([[colorscheme gruvbox]])
     end,
   },
-  -- Statusline
-  {
-    'nvim-lualine/lualine.nvim',
-    opts = {
-      options = {
-        icons_enabled = false,
-        component_separators = '|',
-        section_separators = '',
-      },
-    },
-  },
-  -- Mouse for vim
-  {
-    'ggandor/leap.nvim',
-    config = function()
-      vim.keymap.set("n", "S", "<Plug>(leap-backward-to)")
-      vim.keymap.set("n", "s", "<Plug>(leap-forward-to)")
-    end
-  },
-  -- Leader hints
-  {
-    'echasnovski/mini.clue',
-    config = function()
-      local miniclue = require('mini.clue')
-      miniclue.setup({
-        triggers = {
-          { mode = 'n', keys = '<leader>' },
-          { mode = 'x', keys = '<leader>' },
-        },
-        clues = { miniclue.gen_clues.builtin_completion(), },
-        window = { delay = 0, config = { width = 'auto' } },
-      })
-    end
-  },
-  -- Copilot.
   {
     "zbirenbaum/copilot.lua",
     opts = {
@@ -147,7 +37,40 @@ require('lazy').setup({
       }
     },
   },
-  -- Git stuff.
+  {
+    'nvim-lualine/lualine.nvim',
+    opts = {
+      options = {
+        theme = 'gruvbox',
+        icons_enabled = false,
+        component_separators = '',
+        section_separators = '',
+      },
+    },
+  },
+  {
+    'ggandor/leap.nvim',
+    config = function()
+      vim.keymap.set("n", "S", "<Plug>(leap-backward-to)")
+      vim.keymap.set("n", "s", "<Plug>(leap-forward-to)")
+    end
+  },
+  {
+    'echasnovski/mini.clue',
+    opts = {
+    },
+    config = function()
+      local miniclue = require('mini.clue')
+      miniclue.setup({
+        triggers = {
+          { mode = 'n', keys = '<leader>' },
+          { mode = 'x', keys = '<leader>' },
+        },
+        clues = { miniclue.gen_clues.builtin_completion(), },
+        window = { delay = 0, config = { width = 'auto' } },
+      })
+    end
+  },
   {
     'lewis6991/gitsigns.nvim',
     opts = {
@@ -167,34 +90,32 @@ require('lazy').setup({
       },
       on_attach = function(bufnr)
         local gs = package.loaded.gitsigns
-        local stageHunk = function() gs.stage_hunk { vim.fn.line('.'), vim.fn.line('v') } end
-        local resetHunk = function() gs.reset_hunk { vim.fn.line('.'), vim.fn.line('v') } end
-        local showBlame = function() gs.blame_line { full = true } end
         vim.keymap.set('n', ']h', gs.next_hunk, { buffer = bufnr, desc = 'Next hunk' })
         vim.keymap.set('n', '[h', gs.prev_hunk, { buffer = bufnr, desc = 'Prev hunk' })
         vim.keymap.set('n', '<leader>d', gs.diffthis, { buffer = bufnr, desc = 'Diff this' })
         vim.keymap.set('n', '<leader>D', '<C-w>h<cmd>q<cr>', { desc = 'Close diff' })
         vim.keymap.set('n', '<leader>s', gs.stage_hunk, { buffer = bufnr, desc = 'Stage hunk' })
-        vim.keymap.set('x', '<leader>s', stageHunk, { buffer = bufnr, desc = 'Stage hunk' })
+        vim.keymap.set('x', '<leader>s', function() gs.stage_hunk { vim.fn.line('.'), vim.fn.line('v') } end,
+          { buffer = bufnr, desc = 'Stage hunk' })
         vim.keymap.set('n', '<leader>S', gs.reset_hunk, { buffer = bufnr, desc = 'Restore hunk' })
-        vim.keymap.set('x', '<leader>S', resetHunk, { buffer = bufnr, desc = 'Restore hunk' })
-        vim.keymap.set('n', '<leader>b', gs.toggle_current_line_blame, { buffer = bufnr, desc = 'Toggle blame' })
-        vim.keymap.set('n', '<leader>B', showBlame, { buffer = bufnr, desc = 'Toggle line blame' })
+        vim.keymap.set('x', '<leader>S', function() gs.reset_hunk { vim.fn.line('.'), vim.fn.line('v') } end,
+          { buffer = bufnr, desc = 'Restore hunk' })
+        vim.keymap.set('n', '<leader>B', gs.toggle_current_line_blame, { buffer = bufnr, desc = 'Toggle blame' })
+        vim.keymap.set('n', '<leader>b', function() gs.blame_line { full = true } end,
+          { buffer = bufnr, desc = 'Toggle line blame' })
       end
     },
   },
-  -- Fuzzy searching
   {
     'nvim-telescope/telescope.nvim',
     dependencies = { 'nvim-lua/plenary.nvim' },
     config = function()
-      -- Load fzf
       pcall(require('telescope').load_extension, 'fzf')
-      -- Keymaps
       local tsb = require('telescope.builtin')
-      local dd = require('telescope.themes').get_dropdown { winblend = 10, previewer = false, }
       vim.keymap.set('n', '<C-p>', tsb.git_files, { desc = 'Search git files' })
-      vim.keymap.set('n', '<leader>g', function() tsb.current_buffer_fuzzy_find(dd) end, { desc = 'Grep buffer' })
+      vim.keymap.set('n', '<leader>/', function()
+        tsb.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown { winblend = 10, previewer = false, })
+      end, { desc = 'Search buffer' })
       vim.keymap.set('n', '<leader><space>b', tsb.buffers, { desc = 'Search buffers' })
       vim.keymap.set('n', '<leader><space>d', tsb.diagnostics, { desc = 'Search diagnostics' })
       vim.keymap.set('n', '<leader><space>f', tsb.find_files, { desc = 'Search files' })
@@ -207,22 +128,20 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader><space>o', tsb.vim_options, { desc = 'Search vim options' })
     end
   },
-  -- LSP configuration
   {
     'VonHeikemen/lsp-zero.nvim',
     branch = 'v3.x',
     dependencies = {
-      -- LSP servers
+      -- LSP dependencies.
       'neovim/nvim-lspconfig',
       'williamboman/mason.nvim',
       'williamboman/mason-lspconfig.nvim',
-      'folke/neodev.nvim',
-      -- Autocompletion
+      -- Autocompletion.
       'hrsh7th/nvim-cmp',
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-buffer',
       'hrsh7th/cmp-path',
-      -- Snippets
+      -- Snippets.
       'L3MON4D3/LuaSnip',
       'saadparwaiz1/cmp_luasnip',
       'rafamadriz/friendly-snippets',
@@ -236,14 +155,13 @@ require('lazy').setup({
         vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show error' })
         vim.keymap.set('n', '<leader>E', vim.diagnostic.setloclist, { desc = 'Show diagnostics' })
         vim.keymap.set('n', '<leader>a', vim.lsp.buf.code_action, { buffer = bufnr, desc = 'Code action' })
-        vim.keymap.set('n', '<leader>R', vim.lsp.buf.rename, { buffer = bufnr, desc = 'Rename variable' })
+        vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename, { buffer = bufnr, desc = 'Rename variable' })
         vim.keymap.set('n', '<leader>f', vim.lsp.buf.format, { buffer = bufnr, desc = 'Format document' })
         vim.keymap.set('n', 'gr', vim.lsp.buf.references, { buffer = bufnr, desc = 'LSP: References' })
         vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
         vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
       end)
       -- LSP servers.
-      require('neodev').setup({})
       require('mason').setup({})
       require('mason-lspconfig').setup({
         ensure_installed = { 'lua_ls', 'tsserver', 'rust_analyzer' },
@@ -277,9 +195,7 @@ require('lazy').setup({
     },
     build = ':TSUpdate',
     opt = {
-      sync_install = false,
-      auto_install = true,
-      ensure_installed = { 'lua', 'markdown', 'markdown_inline', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash' },
+      ensure_installed = { 'go', 'c', 'lua', 'markdown', 'markdown_inline', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash' },
       indent = { enable = true },
       highlight = { enable = true },
       textobjects = {
@@ -295,29 +211,81 @@ require('lazy').setup({
             ['ic'] = '@class.inner',
             ['as'] = '@struct.outer',
             ['is'] = '@struct.inner',
-          },
-        },
-        move = {
-          enable = true,
-          set_jumps = true,
-          goto_next_start = {
-            [']f'] = '@function.outer',
-            [']m'] = '@class.outer',
-          },
-          goto_next_end = {
-            [']F'] = '@function.outer',
-            [']M'] = '@class.outer',
-          },
-          goto_previous_start = {
-            ['[f'] = '@function.outer',
-            ['[m'] = '@class.outer',
-          },
-          goto_previous_end = {
-            ['[F'] = '@function.outer',
-            ['[M'] = '@class.outer',
+            ['at'] = '@type.outer',
+            ['it'] = '@type.inner',
           },
         },
       },
     }
   },
 }, {})
+
+-- OPTIONS --
+vim.g.netrw_keepdir = 0
+vim.g.netrw_liststyle = 0
+vim.g.netrw_preview = 1
+vim.g.netrw_use_errorwindow = 0
+vim.opt.breakindent = true
+vim.opt.clipboard = 'unnamed'
+vim.opt.completeopt = 'menuone,noselect,noinsert'
+vim.opt.cursorline = true
+vim.opt.expandtab = true
+vim.opt.history = 5000
+vim.opt.hlsearch = true
+vim.opt.ignorecase = true
+vim.opt.incsearch = true
+vim.opt.lcs = 'trail:•,tab:>-'
+vim.opt.list = true
+vim.opt.mouse = 'a'
+vim.opt.scrolloff = 10
+vim.opt.shiftround = true
+vim.opt.shiftwidth = 4
+vim.opt.showmode = false
+vim.opt.smartcase = true
+vim.opt.smartindent = true
+vim.opt.smarttab = true
+vim.opt.swapfile = false
+vim.opt.tabstop = 4
+vim.opt.timeoutlen = 200
+vim.opt.undofile = true
+vim.opt.updatetime = 150
+vim.opt.whichwrap = 'b,s,<,>,h,l,[,]'
+vim.wo.number = true
+
+-- AUTOCOMMANDS --
+vim.cmd [[ au FileType * set fo-=c fo-=r fo-=o ]]
+vim.cmd [[ au TextYankPost * silent! lua vim.highlight.on_yank() ]]
+vim.cmd [[ au BufWritePre * :%s/\s\+$//e ]]
+vim.cmd [[ au BufLeave * if &filetype ==# 'netrw' | bwipeout! | endif ]]
+
+-- KEYMAPS --
+vim.keymap.set('i', 'jk', '<esc>')
+vim.keymap.set('x', '>', '>gv')
+vim.keymap.set('x', '<', '<gv')
+vim.keymap.set('n', '<c-d>', '<c-d>zz')
+vim.keymap.set('n', '<c-u>', '<c-u>zz')
+vim.keymap.set('n', 'n', 'nzzzv')
+vim.keymap.set('n', 'N', 'Nzzzv')
+vim.keymap.set('n', 'p', 'p`[v`]=<esc>')
+vim.keymap.set('x', 'p', [["_dP]])
+vim.keymap.set('c', '<c-p>', '<up>')
+vim.keymap.set('c', '<c-n>', '<down>')
+vim.keymap.set('i', '<c-e>', '<c-o>$')
+vim.keymap.set('i', '<c-a>', '<c-o>^')
+vim.keymap.set('i', '<c-k>', '<up>')
+vim.keymap.set('i', '<c-j>', '<down>')
+vim.keymap.set('i', '<c-h>', '<left>')
+vim.keymap.set('i', '<c-l>', '<right>')
+vim.keymap.set('n', '<c-up>', '<cmd>cprev<cr>')
+vim.keymap.set('n', '<c-down>', '<cmd>cnext<cr>')
+vim.keymap.set('n', '<tab>', '<cmd>bn<cr>')
+vim.keymap.set('n', '<s-tab>', '<cmd>bp<cr>')
+-- leader keys
+vim.keymap.set('n', '<leader>w', '<cmd>w<cr>', { desc = 'Write buffer' })
+vim.keymap.set('n', '<leader>q', '<cmd>q<cr>', { desc = 'Quit buffer' })
+vim.keymap.set('n', '<leader>x', '<cmd>!chmod +x %<CR>', { desc = 'Make file executable' })
+vim.keymap.set('n', '<leader>y', '"+Y', { desc = "Yank to clipborad" })
+vim.keymap.set('x', '<leader>y', '"+y', { desc = "Yank to clipborad" })
+vim.keymap.set({ 'n', 'x' }, '<leader>p', '"+p', { desc = "paste from clipborad" })
+vim.keymap.set({ 'n', 'x' }, '<leader>P', '"+P', { desc = "Paste from clipborad" })
+

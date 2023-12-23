@@ -1,3 +1,18 @@
+# PATH
+export PATH="$HOME/.local/bin:$PATH"
+
+# EXPORTS
+export EDITOR="nvim"
+export DOTFILES="$HOME/dots"
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XWAYLAND_NO_GLAMOR=1         # stop xwayland flikers
+export WLR_NO_HARDWARE_CURSORS=1    # show cursors
+
+# HOMEBREW
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
 # ALIASES
 alias v="nvim"
 alias vd="nvim ."
@@ -86,9 +101,6 @@ bindkey -M menuselect 'h' vi-backward-char
 bindkey -M menuselect 'k' vi-up-line-or-history
 bindkey -M menuselect 'l' vi-forward-char
 bindkey -M menuselect 'j' vi-down-line-or-history
-
-# TMUX
-tmux new -d -s scratch 2> /dev/null
 
 # INITIALIZATIONS
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
