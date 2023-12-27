@@ -18,6 +18,12 @@ while IFS= read -r line; do
   fi
 done < "links.txt"
 
+read -n1 -p "Install packages? [y/n] " ANSWER
+case $ANSWER in
+  y|Y) echo ;;
+  *) echo ""; exit 1 ;;
+esac
+
 echo ":: Installing packages [APT] ::"
 sudo apt install $(cat packages/apt.txt | sed 's/#.*//' | tr "\n" " ") -y
 
