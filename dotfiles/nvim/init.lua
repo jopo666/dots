@@ -22,6 +22,7 @@ vim.wo.number = true -- Show line numbers
 
 -- KEYMAPS --
 vim.keymap.set('i', 'jk', '<esc>')
+vim.keymap.set('i', '<esc>', '<esc>')
 vim.keymap.set('n', '<leader>w', '<cmd>w<cr>', { desc = 'Write buffer' })
 vim.keymap.set('n', '<leader>q', '<cmd>q<cr>', { desc = 'Quit buffer' })
 vim.keymap.set('n', '<leader>X', '<cmd>!chmod +x %<CR>', { desc = 'Make file executable' })
@@ -58,7 +59,7 @@ vim.keymap.set('n', '<c-up>', '<cmd>cprev<cr>')
 vim.keymap.set('n', '<c-down>', '<cmd>cnext<cr>')
 vim.keymap.set('n', '<leader>x', function()
   for _, win in pairs(vim.fn.getwininfo()) do
-    if win["quickfix"] == 1 then
+    if win['quickfix'] == 1 then
       vim.cmd "cclose"
       return
     end
@@ -72,6 +73,8 @@ end
 vim.cmd [[ au BufWritePre * :%s/\s\+$//e ]]
 -- Highlight yanks
 vim.cmd [[ au TextYankPost * silent! lua vim.highlight.on_yank() ]]
+-- Return to last position
+vim.cmd [[ autocmd BufReadPost *  if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal! g`\"" | endif ]]
 
 -- PLUGIN MANAGER --
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
@@ -85,12 +88,39 @@ require('lazy').setup({
   -- Tim Pope
   { 'tpope/vim-commentary' },
   { 'tpope/vim-sleuth' },
-  { 'tpope/vim-surround' },
   { 'tpope/vim-obsession' },
-  { 'tpope/vim-unimpaired' },
   { 'tpope/vim-vinegar' },
+  -- Lazgit
+  {
+    'kdheepak/lazygit.nvim',
+    opts = {},
+    config = function()
+      vim.keymap.set('n', '<leader>g', '<cmd>LazyGit<cr>', { desc = 'Open lazygit' })
+    end
+  },
+  -- Surround
+  { "kylechui/nvim-surround", opts = {} },
+  -- Autopairs
+  { 'windwp/nvim-autopairs',  opts = {} },
+  -- Toggleterm
+  {
+    'akinsho/toggleterm.nvim',
+    version = "*",
+    config = function()
+      require("toggleterm").setup()
+      vim.keymap.set({ 'n', 't' }, '<C-j>', '<cmd>ToggleTerm<cr>')
+    end
+  },
+  -- Mouse
+  {
+    'ggandor/leap.nvim',
+    config = function()
+      require('leap').create_default_mappings()
+    end
+  },
+  -- Hints
+  { 'folke/which-key.nvim', opts = {} },
   -- Colorscheme
-  { 'ellisonleao/gruvbox.nvim' },
   {
     'projekt0n/github-nvim-theme',
     priority = 1000,
@@ -108,29 +138,6 @@ require('lazy').setup({
         section_separators = '',
       },
     },
-  },
-  -- Mouse for vim
-  {
-    'ggandor/leap.nvim',
-    config = function()
-      vim.keymap.set("n", "S", "<Plug>(leap-backward-to)")
-      vim.keymap.set("n", "s", "<Plug>(leap-forward-to)")
-    end
-  },
-  -- Leader hints
-  {
-    'echasnovski/mini.clue',
-    config = function()
-      local miniclue = require('mini.clue')
-      miniclue.setup({
-        triggers = {
-          { mode = 'n', keys = '<leader>' },
-          { mode = 'x', keys = '<leader>' },
-        },
-        clues = { miniclue.gen_clues.builtin_completion(), },
-        window = { delay = 0, config = { width = 'auto' } },
-      })
-    end
   },
   -- Copilot.
   {
@@ -194,7 +201,7 @@ require('lazy').setup({
       local tsb = require('telescope.builtin')
       local dd = require('telescope.themes').get_dropdown { winblend = 10, previewer = false, }
       vim.keymap.set('n', '<C-p>', tsb.git_files, { desc = 'Search git files' })
-      vim.keymap.set('n', '<leader>g', function() tsb.current_buffer_fuzzy_find(dd) end, { desc = 'Grep buffer' })
+      vim.keymap.set('n', '<C-f>', function() tsb.current_buffer_fuzzy_find(dd) end, { desc = 'Grep buffer' })
       vim.keymap.set('n', '<leader><space>b', tsb.buffers, { desc = 'Search buffers' })
       vim.keymap.set('n', '<leader><space>d', tsb.diagnostics, { desc = 'Search diagnostics' })
       vim.keymap.set('n', '<leader><space>f', tsb.find_files, { desc = 'Search files' })
@@ -217,6 +224,8 @@ require('lazy').setup({
       'williamboman/mason.nvim',
       'williamboman/mason-lspconfig.nvim',
       'folke/neodev.nvim',
+      -- Formatting with conform
+      'stevearc/conform.nvim',
       -- Autocompletion
       'hrsh7th/nvim-cmp',
       'hrsh7th/cmp-nvim-lsp',
@@ -237,7 +246,9 @@ require('lazy').setup({
         vim.keymap.set('n', '<leader>E', vim.diagnostic.setloclist, { desc = 'Show diagnostics' })
         vim.keymap.set('n', '<leader>a', vim.lsp.buf.code_action, { buffer = bufnr, desc = 'Code action' })
         vim.keymap.set('n', '<leader>R', vim.lsp.buf.rename, { buffer = bufnr, desc = 'Rename variable' })
-        vim.keymap.set('n', '<leader>f', vim.lsp.buf.format, { buffer = bufnr, desc = 'Format document' })
+        vim.keymap.set('n', '<leader>f', function()
+          require("conform").format({ async = true, lsp_fallback = true })
+        end, { desc = "Format buffer", })
         vim.keymap.set('n', 'gr', vim.lsp.buf.references, { buffer = bufnr, desc = 'LSP: References' })
         vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
         vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
@@ -246,8 +257,41 @@ require('lazy').setup({
       require('neodev').setup({})
       require('mason').setup({})
       require('mason-lspconfig').setup({
-        ensure_installed = { 'lua_ls', 'tsserver', 'rust_analyzer' },
+        ensure_installed = {
+          'bashls',
+          -- 'csharp_ls',
+          'dockerls',
+          'eslint',
+          'grammarly',
+          'html',
+          'htmx',
+          'jsonls',
+          'lua_ls',
+          'marksman',
+          'powershell_es',
+          'pylsp',
+          'pyright',
+          'ruff_lsp',
+          'rust_analyzer',
+          'tailwindcss',
+          'taplo',
+          'tsserver',
+          'vale_ls',
+          'yamlls',
+        },
         handlers = { lsp_zero.default_setup, },
+      })
+      -- Formatting.
+      require("conform").setup({
+        formatters_by_ft = {
+          javascript = { 'prettierd' },
+          json = { 'prettierd' },
+          markdown = { 'prettierd' },
+          python = { 'ruff' },
+          shell = { 'shftm' },
+          typescript = { 'prettierd' },
+          yaml = { 'prettierd' },
+        },
       })
       -- Autocomplete
       local cmp = require('cmp')
@@ -277,9 +321,20 @@ require('lazy').setup({
     },
     build = ':TSUpdate',
     opt = {
-      sync_install = false,
       auto_install = true,
-      ensure_installed = { 'lua', 'markdown', 'markdown_inline', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash' },
+      ensure_installed = {
+        'bash',
+        'go',
+        'javascript',
+        'lua',
+        'markdown',
+        'markdown_inline',
+        'python',
+        'rust',
+        'typescript',
+        'vim',
+        'zig'
+      },
       indent = { enable = true },
       highlight = { enable = true },
       textobjects = {
@@ -295,26 +350,8 @@ require('lazy').setup({
             ['ic'] = '@class.inner',
             ['as'] = '@struct.outer',
             ['is'] = '@struct.inner',
-          },
-        },
-        move = {
-          enable = true,
-          set_jumps = true,
-          goto_next_start = {
-            [']f'] = '@function.outer',
-            [']m'] = '@class.outer',
-          },
-          goto_next_end = {
-            [']F'] = '@function.outer',
-            [']M'] = '@class.outer',
-          },
-          goto_previous_start = {
-            ['[f'] = '@function.outer',
-            ['[m'] = '@class.outer',
-          },
-          goto_previous_end = {
-            ['[F'] = '@function.outer',
-            ['[M'] = '@class.outer',
+            ['at'] = '@type.outer',
+            ['it'] = '@type.inner',
           },
         },
       },
