@@ -4,6 +4,7 @@ curl
 dmenu
 git
 htop
+i3status
 mako-notifier
 pulsemixer
 sway

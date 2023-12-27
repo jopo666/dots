@@ -4,12 +4,14 @@ glow
 lazydocker
 lazygit
 neovim
+node
 pass
 pipx
 python@3.10
 python@3.11
 ripgrep
 rm-improved
+rustup
 slides
 starship
 zoxide
