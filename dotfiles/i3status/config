@@ -28,7 +28,7 @@ volume master {
 }
 
 battery 1 {
-    format = " BAT %percentage %remaining "
+    format = " BAT %percentage "
     integer_battery_capacity = true
     last_full_capacity = true
 }
