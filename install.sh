@@ -40,3 +40,8 @@ while ifs= read -r package; do
     brew install "$package"
   fi
 done < "./packages/brew.txt"
+
+if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
+  echo ":: Installing tmux plugin manager ::"
+  git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+fi

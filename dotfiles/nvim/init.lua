@@ -3,39 +3,36 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- OPTIONS --
-vim.g.netrw_keepdir = 0
-vim.g.netrw_preview = 1
-vim.g.netrw_use_errorwindow = 0
-vim.opt.breakindent = true -- Soft wrap keeps indent
-vim.opt.cursorline = true -- Show current line
-vim.opt.lcs = 'trail:•,tab:>-' -- Visualise whitespace
-vim.opt.list = true -- Visualise whitespace
-vim.opt.ignorecase = true -- Ignore case on search.
-vim.opt.smartcase = true -- Ignore case unless upper
-vim.opt.scrolloff = 10 -- Always show some context
-vim.opt.showmode = false -- Shown in statusline
-vim.opt.smartindent = true -- Start with corrent indenting
-vim.opt.swapfile = false -- No swapfiles
-vim.opt.timeoutlen = 200 -- Faster timeout
-vim.opt.undofile = true -- Persistent undo!
-vim.wo.number = true -- Show line numbers
+vim.opt.breakindent = true -- soft wrap keeps indent
+vim.opt.cursorline = true -- show current line
+vim.opt.lcs = 'trail:•,tab:>-' -- visualise whitespace
+vim.opt.list = true -- visualise whitespace
+vim.opt.ignorecase = true -- ignore case on search.
+vim.opt.smartcase = true -- ignore case unless upper
+vim.opt.scrolloff = 10 -- always show some context
+vim.opt.showmode = false -- shown in statusline
+vim.opt.smartindent = true -- start with corrent indenting
+vim.opt.swapfile = false -- no swapfiles
+vim.opt.timeoutlen = 200 -- faster timeout
+vim.opt.undofile = true -- persistent undo!
+vim.wo.number = true -- show line numbers
 
 -- KEYMAPS --
 vim.keymap.set('i', 'jk', '<esc>')
 vim.keymap.set('i', '<esc>', '<esc>')
-vim.keymap.set('n', '<leader>w', '<cmd>w<cr>', { desc = 'Write buffer' })
-vim.keymap.set('n', '<leader>q', '<cmd>q<cr>', { desc = 'Quit buffer' })
-vim.keymap.set('n', '<leader>X', '<cmd>!chmod +x %<CR>', { desc = 'Make file executable' })
--- Keep selection when indenting
+vim.keymap.set('n', '<leader>w', '<cmd>w<cr>', { desc = 'write buffer' })
+vim.keymap.set('n', '<leader>q', '<cmd>q<cr>', { desc = 'quit buffer' })
+vim.keymap.set('n', '<leader>x', '<cmd>!chmod +x %<cr>', { desc = 'make file executable' })
+-- keep selection when indenting
 vim.keymap.set('x', '>', '>gv')
 vim.keymap.set('x', '<', '<gv')
--- Center view
+-- center view
 vim.keymap.set('n', '<c-d>', '<c-d>zz')
 vim.keymap.set('n', '<c-u>', '<c-u>zz')
 vim.keymap.set('n', 'n', 'nzzzv')
-vim.keymap.set('n', 'N', 'Nzzzv')
--- Don't copy in visual mode
-vim.keymap.set('x', 'p', [["_dP]])
+vim.keymap.set('n', 'n', 'nzzzv')
+-- don't copy in visual mode
+vim.keymap.set('x', 'p', [["_dp]])
 -- Go through history
 vim.keymap.set('c', '<c-p>', '<up>')
 vim.keymap.set('c', '<c-n>', '<down>')
@@ -67,6 +64,35 @@ vim.keymap.set('n', '<leader>x', function()
   vim.cmd "copen"
 end
 )
+-- NETRW --
+vim.g.netrw_altv = 1
+vim.g.netrw_banner = 0
+vim.g.netrw_browse_split = 4
+vim.g.netrw_keepdir = 0
+vim.g.netrw_liststyle = 3
+vim.g.netrw_preview = 1
+vim.g.netrw_use_errorwindow = 0
+vim.g.netrw_winsize = 20
+vim.cmd [[ function! ToggleFileTree()
+  if exists("t:expl_buf_num")
+      let expl_win_num = bufwinnr(t:expl_buf_num)
+      if expl_win_num != -1
+          let cur_win_nr = winnr()
+          exec expl_win_num . 'wincmd w'
+          close
+          exec cur_win_nr . 'wincmd w'
+          unlet t:expl_buf_num
+      else
+          unlet t:expl_buf_num
+      endif
+  else
+      exec '1wincmd w'
+      Vexplore
+      let t:expl_buf_num = bufnr("%")
+  endif
+endfunction
+map <silent> <c-n> :call ToggleFileTree()<CR>
+]]
 
 -- AUTOCOMMANDS --
 -- Remove trailing whitespace
@@ -88,20 +114,22 @@ require('lazy').setup({
   -- Tim Pope
   { 'tpope/vim-commentary' },
   { 'tpope/vim-sleuth' },
-  { 'tpope/vim-obsession' },
-  { 'tpope/vim-vinegar' },
+  -- Surround
+  { "kylechui/nvim-surround", opts = {} },
+  -- Autopairs
+  { 'windwp/nvim-autopairs',  opts = {} },
+  -- Markdown preview
+  { "ellisonleao/glow.nvim",  config = true, cmd = "Glow" },
+  -- Hints
+  { 'folke/which-key.nvim',   opts = {} },
   -- Lazgit
   {
     'kdheepak/lazygit.nvim',
     opts = {},
     config = function()
       vim.keymap.set('n', '<leader>g', '<cmd>LazyGit<cr>', { desc = 'Open lazygit' })
-    end
+    end,
   },
-  -- Surround
-  { "kylechui/nvim-surround", opts = {} },
-  -- Autopairs
-  { 'windwp/nvim-autopairs',  opts = {} },
   -- Toggleterm
   {
     'akinsho/toggleterm.nvim',
@@ -118,8 +146,6 @@ require('lazy').setup({
       require('leap').create_default_mappings()
     end
   },
-  -- Hints
-  { 'folke/which-key.nvim', opts = {} },
   -- Colorscheme
   {
     'projekt0n/github-nvim-theme',
@@ -207,8 +233,6 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader><space>f', tsb.find_files, { desc = 'Search files' })
       vim.keymap.set('n', '<leader><space>g', tsb.live_grep, { desc = 'Search by grep' })
       vim.keymap.set('n', '<leader><space>s', tsb.spell_suggest, { desc = 'Search spell suggestions' })
-      vim.keymap.set('n', '<leader><space>c', function() tsb.colorscheme({ enable_preview = true }) end,
-        { desc = 'Search colorscheme' })
       vim.keymap.set('n', '<leader><space>h', tsb.help_tags, { desc = 'Search help' })
       vim.keymap.set('n', '<leader><space>r', tsb.oldfiles, { desc = 'Search recent files' })
       vim.keymap.set('n', '<leader><space>o', tsb.vim_options, { desc = 'Search vim options' })
@@ -224,7 +248,6 @@ require('lazy').setup({
       'williamboman/mason.nvim',
       'williamboman/mason-lspconfig.nvim',
       'folke/neodev.nvim',
-      -- Formatting with conform
       'stevearc/conform.nvim',
       -- Autocompletion
       'hrsh7th/nvim-cmp',
@@ -238,31 +261,29 @@ require('lazy').setup({
     },
     config = function()
       local lsp_zero = require('lsp-zero')
-      -- LSP configuration
+      -- LSP CONFIGURATION --
       ---@diagnostic disable-next-line: unused-local
       lsp_zero.on_attach(function(client, bufnr)
         lsp_zero.default_keymaps({ buffer = bufnr })
-        vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show error' })
-        vim.keymap.set('n', '<leader>E', vim.diagnostic.setloclist, { desc = 'Show diagnostics' })
-        vim.keymap.set('n', '<leader>a', vim.lsp.buf.code_action, { buffer = bufnr, desc = 'Code action' })
-        vim.keymap.set('n', '<leader>R', vim.lsp.buf.rename, { buffer = bufnr, desc = 'Rename variable' })
-        vim.keymap.set('n', '<leader>f', function()
-          require("conform").format({ async = true, lsp_fallback = true })
-        end, { desc = "Format buffer", })
+        vim.keymap.set('n', 'ge', vim.diagnostic.open_float, { desc = 'Show error' })
+        vim.keymap.set('n', 'gE', vim.diagnostic.setqflist, { desc = 'Show diagnostics' })
+        vim.keymap.set('n', 'ga', vim.lsp.buf.code_action, { buffer = bufnr, desc = 'LSP: Code action' })
+        vim.keymap.set('n', 'gr', vim.lsp.buf.rename, { buffer = bufnr, desc = 'LSP: Rename' })
         vim.keymap.set('n', 'gr', vim.lsp.buf.references, { buffer = bufnr, desc = 'LSP: References' })
+        vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { buffer = bufnr, desc = 'LSP: Definition' })
+        vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, { buffer = bufnr, desc = 'LSP: Declaration' })
+        vim.keymap.set('n', 'gI', vim.lsp.buf.implementation, { buffer = bufnr, desc = 'LSP: implementation' })
         vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
         vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
       end)
-      -- LSP servers.
+      -- LSP SERVERS ---
       require('neodev').setup({})
       require('mason').setup({})
       require('mason-lspconfig').setup({
         ensure_installed = {
           'bashls',
-          -- 'csharp_ls',
           'dockerls',
           'eslint',
-          'grammarly',
           'html',
           'htmx',
           'jsonls',
@@ -276,12 +297,11 @@ require('lazy').setup({
           'tailwindcss',
           'taplo',
           'tsserver',
-          'vale_ls',
           'yamlls',
         },
         handlers = { lsp_zero.default_setup, },
       })
-      -- Formatting.
+      -- FORMATTING --
       require("conform").setup({
         formatters_by_ft = {
           javascript = { 'prettierd' },
@@ -292,8 +312,24 @@ require('lazy').setup({
           typescript = { 'prettierd' },
           yaml = { 'prettierd' },
         },
+        format_on_save = function()
+          if vim.g.disable_autoformat then
+            return
+          end
+          return { timeout_ms = 500, lsp_fallback = true }
+        end,
       })
-      -- Autocomplete
+      -- Make format on save optional.
+      vim.g.disable_autoformat = false
+      vim.api.nvim_create_user_command("ToggleFormatOnSave", function()
+        if vim.g.disable_autoformat then
+          vim.g.disable_autoformat = false
+        else
+          vim.g.disable_autoformat = true
+        end
+      end, {})
+      vim.keymap.set('n', '<leader>F', '<cmd>ToggleFormatOnSave<cr>', { desc = 'Toggle format on save', })
+      -- AUTOCOMPLETE --
       local cmp = require('cmp')
       local cmp_action = lsp_zero.cmp_action()
       cmp.setup({
@@ -313,48 +349,65 @@ require('lazy').setup({
       })
     end
   },
-  -- Treesitter.
+  -- TREE-SITTER --
   {
     'nvim-treesitter/nvim-treesitter',
     dependencies = {
       'nvim-treesitter/nvim-treesitter-textobjects',
+      'RRethy/nvim-treesitter-textsubjects',
     },
     build = ':TSUpdate',
-    opt = {
-      auto_install = true,
-      ensure_installed = {
-        'bash',
-        'go',
-        'javascript',
-        'lua',
-        'markdown',
-        'markdown_inline',
-        'python',
-        'rust',
-        'typescript',
-        'vim',
-        'zig'
-      },
-      indent = { enable = true },
-      highlight = { enable = true },
-      textobjects = {
-        select = {
-          enable = true,
-          lookahead = true,
-          keymaps = {
-            ['aa'] = '@parameter.outer',
-            ['ia'] = '@parameter.inner',
-            ['af'] = '@function.outer',
-            ['if'] = '@function.inner',
-            ['ac'] = '@class.outer',
-            ['ic'] = '@class.inner',
-            ['as'] = '@struct.outer',
-            ['is'] = '@struct.inner',
-            ['at'] = '@type.outer',
-            ['it'] = '@type.inner',
-          },
-        },
-      },
-    }
   },
 }, {})
+
+
+-- Treesitter configuration must be after plugins are loaded.
+---@diagnostic disable-next-line: missing-fields
+require 'nvim-treesitter.configs'.setup {
+  ensure_installed = {
+    'bash',
+    'lua',
+    'markdown',
+    'python',
+    'rust',
+    'zig'
+  },
+  sync_install = true,
+  auto_install = true,
+  highlight = { enable = true },
+  indent = { enable = true },
+  incremental_selection = {
+    enable = true,
+    keymaps = {
+      init_selection = '<CR>',
+      node_incremental = '<C-h>',
+      node_decremental = '<C-l>',
+    },
+  },
+  textsubjects = {
+    enable = true,
+    keymaps = {
+      ['<cr>'] = 'textsubjects-smart',
+      ['i<cr>'] = 'textsubjects-container-inner',
+      ['a<cr>'] = 'textsubjects-container-outer',
+    },
+  },
+  textobjects = {
+    select = {
+      enable = true,
+      lookahead = true,
+      keymaps = {
+        ['aa'] = '@parameter.outer',
+        ['ia'] = '@parameter.inner',
+        ['af'] = '@function.outer',
+        ['if'] = '@function.inner',
+        ['ac'] = '@class.outer',
+        ['ic'] = '@class.inner',
+        ['as'] = '@struct.outer',
+        ['is'] = '@struct.inner',
+        ['at'] = '@type.outer',
+        ['it'] = '@type.inner',
+      },
+    },
+  },
+}

@@ -1,33 +1,33 @@
 # Dotfiles
 
-Prepare everyting on Ubuntu.
+## Prepare everyting on Ubuntu
 
 ```bash
+# Dependencies
 sudo apt update && sudo apt update
+sudo apt-get install build-essential git curl vim
 # Change shell to zsh.
 sudo chsh jopo -s zsh
-# Download homebrew and it's dependencies
+# Homebrew
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-sudo apt-get install build-essential
 ```
 
-Bootstrap dotfiles.
+## Bootstrap dotfiles
 
 ```bash
 bash install.sh
 ```
 
-Install tmux plugin manager.
+### After install
 
 ```bash
-git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-```
-
-Generate your SSH keys.
-
-```bash
+# Generate your SSH keys
 ssh-keygen -t ed25519 -C "email@here.com" -f .ssh/github
+# Set sudo access
+sudo chmod +s $(which brightnessctl)
 ```
+
+### Firefox
 
 Enable following settings in Firefox and copy `chrome` folder to the firefox profile.
 
