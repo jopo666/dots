@@ -6,21 +6,21 @@ vim.g.maplocalleader = ' '
 
 -- OPTIONS --
 vim.opt.breakindent = true -- soft wrap keeps indent
+vim.opt.colorcolumn = '80' -- show 80 char column
 vim.opt.cursorline = true -- show current line
+vim.opt.expandtab = true -- use spaces instead of tabs
+vim.opt.ignorecase = true -- ignore case on search.
 vim.opt.lcs = 'trail:•,tab:>-' -- visualise whitespace
 vim.opt.list = true -- visualise whitespace
-vim.opt.ignorecase = true -- ignore case on search.
-vim.opt.smartcase = true -- ignore case unless upper
 vim.opt.scrolloff = 10 -- always show some context
+vim.opt.shiftwidth = 4 -- indent is 4 spaces
 vim.opt.showmode = false -- shown in statusline
+vim.opt.smartcase = true -- ignore case unless upper
 vim.opt.smartindent = true -- start with corrent indenting
 vim.opt.swapfile = false -- no swapfiles
 vim.opt.tabstop = 4 -- tabs are 4 spaces
-vim.opt.shiftwidth = 4 -- indent is 4 spaces
-vim.opt.expandtab = true -- use spaces instead of tabs
 vim.opt.timeoutlen = 200 -- faster timeout
 vim.opt.undofile = true -- persistent undo!
-vim.opt.colorcolumn = '80' -- show 80 char column
 vim.wo.number = true -- show line numbers
 
 -- KEYMAPS --
@@ -73,26 +73,9 @@ vim.keymap.set('n', '<leader>x', function()
 end, { desc = 'Toggle quickfix' })
 
 -- NETRW --
-vim.g.netrw_altv = 1
-vim.g.netrw_banner = 0
-vim.g.netrw_browse_split = 0
 vim.g.netrw_keepdir = 1
-vim.g.netrw_liststyle = 3
 vim.g.netrw_preview = 1
 vim.g.netrw_use_errorwindow = 0
-vim.g.netrw_winsize = 20
-vim.keymap.set('n', '<c-n>', function()
-    local netrw_found = false
-    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-        if vim.api.nvim_buf_get_option(buf, 'filetype') == 'netrw' then
-            vim.api.nvim_buf_delete(buf, { force = true })
-            netrw_found = true
-        end
-    end
-    if not netrw_found then
-        vim.cmd('Vexplore')
-    end
-end, { desc = 'Toggle file tree' })
 
 -- AUTOCOMMANDS --
 -- Remove trailing whitespace
@@ -101,8 +84,6 @@ vim.cmd [[ au BufWritePre * :%s/\s\+$//e ]]
 vim.cmd [[ au TextYankPost * silent! lua vim.highlight.on_yank() ]]
 -- Return to last position
 vim.cmd [[ autocmd BufReadPost *  if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal! g`\"" | endif ]]
--- Close netrw buffer on leave
-vim.cmd [[ autocmd FileType netrw autocmd BufLeave <buffer> if &filetype == 'netrw' | :bd | endif ]]
 
 
 -- PLUGIN MANAGER --
@@ -114,6 +95,8 @@ vim.opt.rtp:prepend(lazypath)
 
 -- PLUGINS --
 require('lazy').setup({
+    -- Netrw
+    { 'tpope/vim-vinegar' },
     -- Colorscheme
     {
         'projekt0n/github-nvim-theme',
@@ -153,14 +136,6 @@ require('lazy').setup({
         config = function()
             vim.keymap.set('n', '<leader>u', '<cmd>UndotreeToggle<cr>', { desc = 'Toggle undotree' })
         end
-    },
-    -- Lazgit
-    {
-        'kdheepak/lazygit.nvim',
-        opts = {},
-        config = function()
-            vim.keymap.set('n', '<leader>g', '<cmd>LazyGit<cr>', { desc = 'Open lazygit' })
-        end,
     },
     -- Toggleterm
     {
@@ -452,7 +427,6 @@ require('lazy').setup({
         'nvim-treesitter/nvim-treesitter',
         dependencies = {
             'nvim-treesitter/nvim-treesitter-textobjects',
-            'RRethy/nvim-treesitter-textsubjects',
             'nvim-treesitter/nvim-treesitter-context',
         },
         build = ':TSUpdate',
@@ -480,14 +454,6 @@ require 'nvim-treesitter.configs'.setup {
             init_selection = '<CR>',
             node_incremental = '<C-h>',
             node_decremental = '<C-l>',
-        },
-    },
-    textsubjects = {
-        enable = true,
-        keymaps = {
-            ['<cr>'] = 'textsubjects-smart',
-            ['i<cr>'] = 'textsubjects-container-inner',
-            ['a<cr>'] = 'textsubjects-container-outer',
         },
     },
     textobjects = {
