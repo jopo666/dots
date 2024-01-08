@@ -111,6 +111,9 @@ input type:keyboard {
     repeat_rate 100
 }
 
+bindswitch --reload --locked lid:on output eDP-1 disable
+bindswitch --reload --locked lid:off output eDP-1 enable
+
 ### COLORS ###
 #                       border  bground text    indicator child_border
 client.focused          #FFFFFF #000000 #FFFFFF #FFFFFF   #FFFFFF
