@@ -1,0 +1,94 @@
+#!/bin/usr/env bash
+if [[ ! $- == *i* ]]; then
+	return
+fi
+
+# Exports
+export PS1="\w $ "
+export TERM="xterm-256color"
+export PATH="$HOME/.local/bin:$PATH"
+export EDITOR="nvim"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_DATA_HOME="$HOME/.local/share"
+export CDPATH=".:$HOME:$HOME/projects:$HOME/work"
+export HISTSIZE=10000
+export HISTFILESIZE=10000
+export HISTCONTROL=ignoreboth
+export PROMPT_COMMAND="history -a"
+export TZ="Europe/Helsinki"
+
+# Extend path
+if [ -d "$HOME/.cargo/" ]; then
+    export PATH="$PATH:$HOME/.cargo/bin"
+fi
+if [ -d "$HOME/.local/share/nvim/mason/bin/" ]; then
+    export PATH="$PATH:$HOME/.local/share/nvim/mason/bin/"
+fi
+if [ -d "$HOME/zig" ]; then
+    export PATH="$PATH:$HOME/zig"
+fi
+
+# Homebrew
+if [ -d /home/linuxbrew ]; then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
+
+# Aliases
+alias v="nvim"
+alias vd="nvim ."
+alias lg="lazygit"
+if command -v bat &> /dev/null; then
+    alias cat="bat --plain --plain"
+fi
+alias lsa="ls -a"
+alias l="ls --color -lh --group-directories-first"
+alias ll="ls --color -lha --group-directories-first"
+alias lt="tree -C --gitignore"
+alias lta="tree -C -a --gitignore"
+alias ltd="tree -C -d --gitignore"
+alias dstop="docker ps -aq | xargs -r docker stop"
+alias dpurge="docker ps -aq | xargs -r docker stop | xargs -r docker rm && docker volume prune -af && docker system prune -af"
+alias gr="grep --color=auto -i"
+alias cl="xclip -selection clipboard"
+alias py='python'
+alias pya='source .venv/bin/activate'
+alias pyd='deactivate'
+alias tmz='tmux-sessionizer'
+alias n="nnn -d"
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+
+if command -v doas &> /dev/null; then
+    alias poweroff="doas poweroff"
+    alias reboot="doas reboot"
+    alias suspend="doas zzz"
+else
+    alias reboot="shutdown -r now"
+    alias poweroff="shutdown now"
+    alias suspend="systemctl suspend"
+fi
+
+# Bindings
+bind "\C-p":history-search-backward
+bind "\C-n":history-search-forward
+bind "\C-k":forward-word
+bind "\C-j":backward-word
+
+# FZF
+if command -v fzf &> /dev/null; then
+    if [ -d /home/linuxbrew ]; then
+        source "$HOMEBREW_PREFIX"/opt/fzf/shell/completion.bash
+        source "$HOMEBREW_PREFIX"/opt/fzf/shell/key-bindings.bash
+    else
+        source /usr/share/fzf/key-bindings.bash
+        source /usr/share/fzf/completion.bash
+    fi
+    bind -x '"\C-f": fzf-file-widget'
+fi
+
+# Run startx on tty1
+if [ -z "$DISPLAY" ] && [ "$(tty)" = "/dev/tty1" ]; then
+  exec startx
+fi

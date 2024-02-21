@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+SELECTED=$(find ~/work ~/projects -mindepth 1 -maxdepth 1 -type d | fzf)
+
+if [[ -z "$SELECTED" ]]; then
+	exit 0
+fi
+
+NAME=$(basename "$SELECTED" | tr . _)
+
+if [[ -z $TMUX ]] && [[ -z $(pgrep tmux) ]]; then
+	tmux new-session -s "$NAME" -c "$SELECTED"
+	exit 0
+fi
+
+if ! tmux has-session -t="$NAME" 2>/dev/null; then
+	tmux new-session -ds "$NAME" -c "$SELECTED"
+fi
+
+tmux switch-client -t "$NAME"

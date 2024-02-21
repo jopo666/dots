@@ -1,0 +1,622 @@
+---@diagnostic disable: missing-fields
+
+--- OPTIONS ---
+vim.g.mapleader = ' '
+vim.g.maplocalleader = ' '
+vim.g.netrw_banner = 0          -- disable netrw banner
+vim.g.netrw_preview = 1         -- vertical split preview
+vim.g.netrw_use_errorwindow = 0 -- ignore errors
+vim.opt.breakindent = true      -- indent wrapped lines
+vim.opt.colorcolumn = '80'      -- show 80 char column
+vim.opt.completeopt = { 'menuone', 'noinsert', 'noselect', 'preview' }
+vim.opt.cursorline = true       -- show current line
+vim.opt.expandtab = true        -- use spaces instead of tabs
+vim.opt.ignorecase = true       -- ignore case
+vim.opt.laststatus = 3          -- global statusline
+vim.opt.listchars = { tab = '» ', trail = '•', extends = '›', precedes = '‹', nbsp = '␣', eol = '¬' }
+vim.opt.mouse = 'a'             -- disable temporarily with shift
+vim.opt.number = true           -- show line numbers
+vim.opt.path = { '.,**' }       -- find recursively
+vim.opt.pumheight = 10          -- max completion items
+vim.opt.relativenumber = true   -- and relative line numbers
+vim.opt.scrolloff = 10          -- always show some context
+vim.opt.shortmess:append 'c'    -- don't show completion messages
+vim.opt.signcolumn = 'yes'      -- always show sign column
+vim.opt.smartcase = true        -- don't ignore case with capitals
+vim.opt.swapfile = false        -- no swapfiles
+vim.opt.tabstop = 4             -- tab width
+vim.opt.shiftwidth = 4          -- indent width
+vim.opt.softtabstop = 4         -- tab width
+vim.opt.termguicolors = true    -- 24-bit RGB colors
+vim.opt.timeoutlen = 750        -- faster timeout
+vim.opt.undofile = true         -- persistent undo
+vim.opt.updatetime = 100        -- faster updates
+
+--- AUTOCOMMANDS AND FUNCTIONS ---
+
+-- remove trailing whitespace
+vim.cmd [[ au BufWritePre * :%s/\s\+$//e ]]
+-- highlight yanks
+vim.cmd [[ au TextYankPost * silent! lua vim.highlight.on_yank() ]]
+-- return to last position when opening buffer
+vim.cmd [[ autocmd BufReadPost *  if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal! g`\"" | endif ]]
+-- delete hidden netrw buffers
+vim.cmd [[ autocmd Filetype netrw setl bufhidden=delete ]]
+-- don't continue comments
+vim.cmd [[ autocmd FileType * set formatoptions-=ro ]]
+-- toggle spelling in markdown and gitcommit
+vim.cmd [[ autocmd FileType markdown,gitcommit setlocal spell ]]
+
+local toggle_quickfix = function()
+    for _, win in pairs(vim.fn.getwininfo()) do
+        if win['quickfix'] == 1 then vim.cmd 'cclose' else vim.cmd 'copen' end
+    end
+end
+
+local toggle_locallist = function()
+    for _, win in pairs(vim.fn.getwininfo()) do
+        if win['loclist'] == 1 then vim.cmd 'lclose' else vim.cmd 'silent! lopen' end
+    end
+end
+
+local grep_current_word = function()
+    local current_word = vim.fn.expand("<cword>")
+    if vim.fn.system('git rev-parse --is-inside-work-tree 2> /dev/null') ~= 0 then
+        vim.fn.execute('vimgrep /\\<' .. current_word .. '\\>/g `git ls-files`')
+    else
+        vim.fn.execute('vimgrep /\\<' .. current_word .. '\\>/g **/*')
+    end
+    vim.cmd [[ copen ]]
+end
+
+--- KEY MAPPINGS ---
+
+vim.keymap.set('i', 'jk', '<esc>')
+vim.keymap.set('i', '<c-e>', '<c-o>$')
+vim.keymap.set('i', '<c-a>', '<c-o>^')
+vim.keymap.set('i', '<c-k>', '<up>')
+vim.keymap.set('i', '<c-j>', '<down>')
+vim.keymap.set('i', '<c-h>', '<left>')
+vim.keymap.set('i', '<c-l>', '<right>')
+vim.keymap.set('i', '<pageup>', '<nop>')
+vim.keymap.set('i', '<pagedown>', '<nop>')
+vim.keymap.set('n', '<pageup>', '<nop>')
+vim.keymap.set('n', '<pagedown>', '<nop>')
+vim.keymap.set('n', 'n', 'nzzzv')
+vim.keymap.set('n', 'n', 'nzzzv')
+vim.keymap.set('n', '*', 'm`:keepjumps normal! *``<cr>')
+vim.keymap.set('n', '#', 'm`:keepjumps normal! #``<cr>')
+vim.keymap.set('n', '<c-s>', 'm`:keepjumps normal! *``<cr>cgn')
+vim.keymap.set('n', '<c-d>', '<c-d>zz')
+vim.keymap.set('n', '<c-u>', '<c-u>zz')
+vim.keymap.set('n', '<c-up>', '<cmd>resize -2<cr>')
+vim.keymap.set('n', '<c-down>', '<cmd>resize +2<cr>')
+vim.keymap.set('n', '<c-left>', '<cmd>vertical resize -2<cr>')
+vim.keymap.set('n', '<c-right>', '<cmd>vertical resize +2<cr>')
+vim.keymap.set('n', '<c-l>', ':cnext<cr>', { silent = true })
+vim.keymap.set('n', '<c-h>', ':cprev<cr>', { silent = true })
+vim.keymap.set('n', ']q', ':cnext<cr>', { silent = true })
+vim.keymap.set('n', '[q', ':cprev<cr>', { silent = true })
+vim.keymap.set('n', ']l', ':lnext<cr>', { silent = true })
+vim.keymap.set('n', '[l', ':lprev<cr>', { silent = true })
+vim.keymap.set('n', '[b', ':bprevious<cr>', { silent = true })
+vim.keymap.set('n', ']b', ':bnext<cr>', { silent = true })
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Previous diagnostic' })
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Next diagnostic' })
+vim.keymap.set({ 'n', 'x' }, 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+vim.keymap.set({ 'n', 'x' }, 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
+vim.keymap.set('x', 'gs', ':sort<cr>')
+vim.keymap.set('x', '>', '>gv')
+vim.keymap.set('x', '<', '<gv')
+vim.keymap.set('x', 'p', [["_dp]])
+vim.keymap.set('x', 'P', [["_dP]])
+vim.keymap.set('x', '<c-s>', ':s///g<left><left><left>')
+vim.keymap.set('c', '<c-p>', '<up>')
+vim.keymap.set('c', '<c-n>', '<down>')
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Previous diagnostic' })
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Next diagnostic' })
+vim.keymap.set('n', '<space><space>', '<c-^>', { desc = 'Switch buffers' })
+vim.keymap.set('n', '<leader>q', toggle_quickfix, { desc = 'Toggle quickfix' })
+vim.keymap.set('n', '<leader>l', toggle_locallist, { desc = 'Toggle locallist' })
+vim.keymap.set('n', '<leader>h', ':nohlsearch<cr>', { desc = 'Clear highlights' })
+vim.keymap.set('n', '<leader>f', ':find ', { desc = 'Find files' })
+vim.keymap.set('n', '<c-f>', ':find ', { desc = 'Find files' })
+vim.keymap.set('n', '<leader>b', ':b ', { desc = 'Find buffers' })
+vim.keymap.set('n', '<leader>x', '<cmd>!chmod +x %<cr>', { desc = 'Make file executable' })
+vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show error' })
+vim.keymap.set('n', '<leader>w', vim.diagnostic.setqflist, { desc = 'Quickfix errors' })
+vim.keymap.set('n', '<leader>y', '"+Y', { desc = 'Yank to clipboard' })
+vim.keymap.set('x', '<leader>y', '"+y', { desc = 'Yank to clipboard' })
+vim.keymap.set('n', '<leader>%', 'ggVG"+y', { desc = 'Yank file to clipboard' })
+vim.keymap.set('n', '<leader>s', grep_current_word, { desc = 'Grep current word' })
+
+--- PLUGINS ---
+
+local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
+if not vim.loop.fs_stat(lazypath) then
+    vim.fn.system {
+        'git',
+        'clone',
+        '--filter=blob:none',
+        'https://github.com/folke/lazy.nvim.git',
+        '--branch=stable',
+        lazypath,
+    }
+end
+vim.opt.rtp:prepend(lazypath)
+
+
+
+require('lazy').setup({
+    -- Comments
+    { 'tpope/vim-commentary' },
+    -- Netrw
+    { 'tpope/vim-vinegar' },
+    -- Tab/indent
+    { 'tpope/vim-sleuth' },
+    -- Unix commands
+    { 'tpope/vim-eunuch' },
+    -- Change/add/remove surroundings
+    { 'tpope/vim-surround' },
+    -- Repeat plugin commands
+    { 'tpope/vim-repeat' },
+    -- Additional motions
+    { 'tpope/vim-unimpaired' },
+    -- Additional text objects
+    { 'wellle/targets.vim' },
+    -- Split or join lines
+    { 'echasnovski/mini.splitjoin',     opts = { mappings = { toggle = 'gJ', } } },
+    -- Replace motion with register
+    { 'vim-scripts/ReplaceWithRegister' },
+    -- Visualize undo tree
+    {
+        'mbbill/undotree',
+        keys = { { '<leader>u', '<cmd>UndotreeToggle<cr>', desc = 'Toggle undotree' } },
+    },
+    -- Harpoon
+    {
+        "ThePrimeagen/harpoon",
+        branch = "harpoon2",
+        dependencies = { "nvim-lua/plenary.nvim" },
+        config = function()
+            local harpoon = require("harpoon")
+            ---@diagnostic disable-next-line: missing-parameter
+            harpoon.setup {}
+            vim.keymap.set("n", "<leader>a", function() harpoon:list():append() end)
+            vim.keymap.set("n", "<c-e>", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
+            vim.keymap.set("n", "<c-p>", function() harpoon:list():prev() end)
+            vim.keymap.set("n", "<c-n>", function() harpoon:list():next() end)
+        end,
+    },
+    -- Git integration
+    {
+        'tpope/vim-fugitive',
+        keys = {
+            { '<leader>g',  '',                      desc = 'Git stuff...' },
+            { '<leader>gP', '<cmd>Git push<cr>',     desc = 'Git push' },
+            { '<leader>ga', '<cmd>Git add %<cr>',    desc = 'Git add file' },
+            { '<leader>gb', '<cmd>Git blame<cr>',    desc = 'Git blame' },
+            { '<leader>gc', '<cmd>Git commit<cr>',   desc = 'Git commit' },
+            { '<leader>gd', '<cmd>Gvdiffsplit<cr>',  desc = 'Git diff' },
+            { '<leader>gg', '<cmd>vertical Git<cr>', desc = 'Git status' },
+            { '<leader>gl', '<cmd>0GlLog --<cr>',    desc = 'Git log current buffer' },
+            { '<leader>gm', ':GMove <c-r>%',         desc = 'Git move' },
+            { '<leader>go', '<cmd>Git checkout<cr>', desc = 'Git checkout' },
+            { '<leader>gq', '<cmd>Git difftool<cr>', desc = 'List changes' },
+            { '<leader>gp', '<cmd>Git pull<cr>',     desc = 'Git pull' },
+        },
+    },
+    -- Git markers and hunk movement
+    {
+        'airblade/vim-gitgutter',
+        lazy = false,
+        keys = {
+            { '[c',         '<cmd>GitGutterPrevHunk<cr>',  desc = 'Previous hunk' },
+            { ']c',         '<cmd>GitGutterNextHunk<cr>',  desc = 'Next hunk' },
+            { '<leader>gr', '<cmd>GitGutterUndoHunk<cr>',  desc = 'Revert hunk' },
+            { '<leader>gs', '<cmd>GitGutterStageHunk<cr>', desc = 'Stage hunk' },
+
+        },
+        config = function() vim.cmd [[ let g:gitgutter_map_keys = 0 ]] end
+    },
+    -- Fuzzy searching
+    {
+        'nvim-telescope/telescope.nvim',
+        dependencies = { 'nvim-lua/plenary.nvim' },
+        keys = {
+            { '<leader>p', '<cmd>Telescope git_files theme=dropdown previewer=false<cr>', desc = 'Find git files' },
+            -- { '<leader>f', '<cmd>Telescope find_files theme=dropdown previewer=false<cr>', desc = 'Find files' },
+            -- { '<leader>b', '<cmd>Telescope buffers theme=dropdown previewer=false<cr>',    desc = 'Find buffers' },
+            { '<leader>n', '<cmd>Telescope live_grep<cr>',                                desc = 'Live grep' },
+        },
+    },
+    -- Lualine
+    {
+        'nvim-lualine/lualine.nvim',
+        opts = {
+            options = {
+                icons_enabled = false,
+                section_separators = '',
+                component_separators = ''
+            },
+            sections = {
+                lualine_a = {},
+                lualine_b = {},
+                lualine_c = { 'filename', 'diagnostics' },
+                lualine_x = { 'branch', 'diff', 'location' },
+                lualine_y = {},
+                lualine_z = {}
+            },
+        }
+    },
+    -- Leader hints
+    {
+        'echasnovski/mini.clue',
+        opts = { triggers = { { mode = 'n', keys = '<Leader>' }, { mode = 'x', keys = '<Leader>' } }, }
+    },
+    -- Gruvbox
+    {
+        'sainnhe/gruvbox-material',
+        priority = 1000,
+        config = function()
+            vim.cmd [[
+            let g:gruvbox_material_background = 'hard'
+            let g:gruvbox_material_foreground = 'original'
+            let g:gruvbox_material_better_performance = 1
+            colorscheme gruvbox-material
+        ]]
+        end
+    },
+    -- Copilot
+    {
+        'zbirenbaum/copilot.lua',
+        opts = {
+            suggestion = {
+                auto_trigger = true,
+                keymap = {
+                    accept = '<C-Space>',
+                    next = '<C-]>',
+                    prev = '<C-[>',
+                    dismiss = '<C-x>',
+                }
+            }
+        },
+    },
+    -- Autocomplete
+    {
+        'hrsh7th/nvim-cmp',
+        dependencies = {
+            'hrsh7th/cmp-nvim-lsp',
+            'hrsh7th/cmp-buffer',
+            'hrsh7th/cmp-cmdline',
+            'hrsh7th/cmp-nvim-lsp-signature-help',
+        },
+        config = function()
+            local cmp = require('cmp')
+            cmp.setup({
+                sources = {
+                    {
+                        name = 'nvim_lsp',
+                        -- disable snippets
+                        entry_filter = function(entry)
+                            return require('cmp').lsp.CompletionItemKind.Snippet ~= entry:get_kind()
+                        end,
+                        group_index = 1
+                    },
+                    { name = 'nvim_lsp_signature_help', group_index = 1 },
+                    { name = 'buffer',                  group_index = 2 },
+                    { name = 'crates',                  group_index = 2 },
+                },
+                mapping = cmp.mapping.preset.insert({
+                    ['<C-u>'] = cmp.mapping.scroll_docs(-4),
+                    ['<C-d>'] = cmp.mapping.scroll_docs(4),
+                }),
+                window = { documentation = { max_height = 20 } },
+            })
+            cmp.setup.cmdline('/', {
+                mapping = cmp.mapping.preset.cmdline(),
+                sources = { { name = 'buffer' } }
+            })
+        end
+    },
+    -- Linters, debuggers and formatters
+    {
+        "williamboman/mason.nvim",
+        dependencies = { "WhoIsSethDaniel/mason-tool-installer.nvim", },
+        config = function()
+            require("mason").setup {}
+            local mason_tool_installer = require("mason-tool-installer")
+            mason_tool_installer.setup({
+                ensure_installed = {
+                    'buf',
+                    'codelldb',
+                    'debugpy',
+                    'delve',
+                    'eslint_d',
+                    'gofumpt',
+                    'goimports',
+                    'markdownlint',
+                    'prettierd',
+                    'shellcheck',
+                    'shfmt',
+                },
+            })
+        end,
+    },
+    -- Linting
+    {
+        'mfussenegger/nvim-lint',
+        config = function()
+            require('lint').linters_by_ft = {
+                sh = { 'shellcheck' },
+                markdown = { 'markdownlint' },
+            }
+            vim.api.nvim_create_autocmd({ "BufWritePost" }, {
+                callback = function() require("lint").try_lint() end,
+            })
+        end,
+    },
+    -- Formatting
+    {
+        'stevearc/conform.nvim',
+        opts = {
+            will_fallback_lsp = true,
+            formatters_by_ft = {
+                proto = { 'buf' },
+                bash = { 'shfmt' },
+                go = { 'goimports', 'gofumpt' },
+                javascript = { 'prettierd' },
+                javascriptreact = { 'prettierd' },
+                json = { 'prettierd' },
+                markdown = { 'prettierd' },
+                python = { 'ruff_format' },
+                sh = { 'shfmt' },
+                protobuf = { 'buf' },
+                typescript = { 'prettierd' },
+                typescriptreact = { 'prettierd' },
+                yaml = { 'prettierd' },
+            },
+        },
+        keys = {
+            { '<leader>f', '<cmd>lua require("conform").format { lsp_fallback=true }<cr>', desc = 'Format file' },
+        },
+    },
+    -- -- Debugging
+    -- {
+    --     'mfussenegger/nvim-dap',
+    --     dependencies = {
+    --         { 'theHamsta/nvim-dap-virtual-text', opts = { highlight_new_as_changed = true } },
+    --         'mfussenegger/nvim-dap-python',
+    --         'rcarriga/nvim-dap-ui',
+    --     },
+    --     keys = {
+    --         { '<leader>d',  '',                                              desc = 'Debug...' },
+    --         { '<leader>dc', '<cmd>lua require"dap".continue()<cr>',          desc = 'DBG: Continue' },
+    --         { '<leader>dn', '<cmd>lua require"dap".step_over()<cr>',         desc = 'DBG: Step over' },
+    --         { '<leader>di', '<cmd>lua require"dap".step_into()<cr>',         desc = 'DBG: Step into' },
+    --         { '<leader>do', '<cmd>lua require"dap".step_out()<cr>',          desc = 'DBG: Step out' },
+    --         { '<leader>dd', '<cmd>lua require"dap".toggle_breakpoint()<cr>', desc = 'Toggle breakpoint' },
+    --         { '<leader>dr', '<cmd>DapToggleRepl<cr>',                        desc = 'Toggle REPL' },
+    --         { '<leader>dl', '<cmd>lua require"dap".list_breakpoints()<cr>',  desc = 'List breakpoints' },
+    --     },
+    -- },
+    -- Language servers (config below)
+    {
+        'neovim/nvim-lspconfig',
+        dependencies = {
+            { 'folke/neodev.nvim',                opts = {} },
+            { 'simrat39/rust-tools.nvim' },
+            { 'Saecki/crates.nvim' },
+            { 'williamboman/mason-lspconfig.nvim' },
+        },
+    },
+    -- Treesitter (config below)
+    {
+        'nvim-treesitter/nvim-treesitter',
+        dependencies = { 'nvim-treesitter/nvim-treesitter-textobjects' },
+        build = ':TSUpdate',
+    },
+}, {})
+
+-- Autoformatting
+local format_is_enabled = true
+vim.api.nvim_create_user_command('ToggleAutoformatting', function()
+    format_is_enabled = not format_is_enabled
+    print('Setting autoformatting to: ' .. tostring(format_is_enabled))
+end, {})
+local _augroups = {}
+local get_augroup = function(client)
+    if not _augroups[client.id] then
+        local group_name = 'lsp-autoformat-' .. client.name
+        local id = vim.api.nvim_create_augroup(group_name, { clear = true })
+        _augroups[client.id] = id
+    end
+
+    return _augroups[client.id]
+end
+vim.api.nvim_create_autocmd('LspAttach', {
+    callback = function(args)
+        vim.bo[args.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
+        local client = vim.lsp.get_client_by_id(args.data.client_id)
+        -- Keymaps
+        vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, { buffer = args.buf })
+        vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { buffer = args.buf })
+        vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename, { buffer = args.buf, desc = 'Rename variable' })
+        vim.keymap.set('n', 'gR', vim.lsp.buf.references, { buffer = args.buf })
+        vim.keymap.set('n', 'gI', vim.lsp.buf.implementation, { buffer = args.buf })
+        vim.keymap.set('n', 'gt', vim.lsp.buf.type_definition, { buffer = args.buf })
+        vim.keymap.set('n', 'K', vim.lsp.buf.hover, { buffer = args.buf })
+        vim.keymap.set('n', '<leader>k', vim.lsp.buf.signature_help, { buffer = args.buf, desc = 'Show signature help' })
+        vim.keymap.set({ 'n', 'v' }, 'ga', vim.lsp.buf.code_action, { buffer = args.buf })
+        -- Disable lsp features.
+        if client.name == "pyright" then
+            client.server_capabilities.renameProvider = false
+        end
+        -- Autoformatting for reasonable clients
+        ---@diagnostic disable-next-line: lowercase-global
+        group = vim.api.nvim_create_augroup('lsp-autoformat', { clear = true })
+        local whitelisted = { 'lua_ls', 'ruff_lsp', 'rust_analyzer' }
+        if not vim.tbl_contains(whitelisted, client.name) then
+            return
+        end
+        -- Create an autocmd that will run *before* we save the buffer.
+        vim.api.nvim_create_autocmd('BufWritePre', {
+            group = get_augroup(client),
+            buffer = args.buf,
+            callback = function()
+                if not format_is_enabled then return end
+                vim.lsp.buf.code_action {
+                    context = { only = { "source.organizeImports" } },
+                    apply = true
+                }
+                vim.lsp.buf.format {
+                    async = false,
+                    filter = function(c) return c.id == client.id end,
+                }
+            end,
+        })
+    end,
+})
+
+-- Setup handler functions
+require('mason-lspconfig').setup {
+    ensure_installed = {
+        'bufls',
+        'dockerls',
+        'html',
+        'htmx',
+        'lua_ls',
+        'pylsp',
+        'pyright',
+        'rust_analyzer',
+        'taplo',
+        'tsserver',
+        'yamlls',
+        'zls',
+    },
+}
+require('mason-lspconfig').setup_handlers {
+    -- Default setup for non-overridden handlers.
+    function(server_name)
+        require('lspconfig')[server_name].setup {}
+    end,
+    ['rust_analyzer'] = function()
+        require('rust-tools').setup {
+            inlay_hints = {
+                only_current_line = true,
+                parameter_hints_prefix = '',
+                other_hints_prefix = '=> ',
+                max_len_align = true,
+            },
+        }
+    end,
+    ['pylsp'] = function()
+        require('lspconfig').pylsp.setup {
+            -- Diagnostics come from ruff
+            handlers = { ['textDocument/publishDiagnostics'] = function() end },
+            settings = {
+                pylsp = {
+                    plugins = {
+                        autopep8 = { enabled = false },
+                        flake8 = { enabled = false },
+                        jedi_completion = { enabled = true },
+                        mccabe = { enabled = false },
+                        preload = { enabled = false },
+                        pycodestyle = { enabled = false },
+                        pydocstyle = { enabled = false },
+                        pyflakes = { enabled = false },
+                        pylint = { enabled = false },
+                        rope_autoimport = { enabled = false },
+                        rope_completion = { enabled = false },
+                        yapf = { enabled = false },
+                    }
+                }
+            }
+        }
+    end,
+    ['pyright'] = function()
+        require('lspconfig').pyright.setup {
+            settings = {
+                python = {
+                    analysis = {
+                        autoSearchPaths = true,
+                        diagnosticMode = 'workspace',
+                        useLibraryCodeForTypes = true,
+                    },
+                },
+            },
+        }
+    end,
+    ['gopls'] = function()
+        require('lspconfig').gopls.setup {
+            settings = {
+                gopls = {
+                    gofumpt = true,
+                    codelenses = {
+                        gc_details = true,
+                        generate = true,
+                        regenerate_cgo = true,
+                        run_govulncheck = true,
+                        test = true,
+                        tidy = true,
+                        upgrade_dependency = true,
+                        vendor = true,
+                    },
+                    hints = {
+                        assignVariableTypes = true,
+                        compositeLiteralFields = true,
+                        compositeLiteralTypes = true,
+                        constantValues = true,
+                        functionTypeParameters = true,
+                        parameterNames = true,
+                        rangeVariableTypes = true,
+                    },
+                    analyses = {
+                        fieldalignment = true,
+                        nilness = true,
+                        unusedparams = true,
+                        unusedwrite = true,
+                        useany = true,
+                    },
+                    usePlaceholders = true,
+                    completeUnimported = true,
+                    staticcheck = true,
+                    directoryFilters = { '-.git' },
+                    semanticTokens = true,
+                },
+            },
+        }
+    end
+}
+-- Doesn't load in lazy
+require 'nvim-treesitter.configs'.setup {
+    auto_install = true,
+    highlight = { enable = true },
+    indent = { enable = true },
+    incremental_selection = {
+        enable = true,
+        keymaps = {
+            init_selection = '<CR>',
+            node_incremental = '<C-h>',
+            node_decremental = '<C-l>',
+        },
+    },
+    textobjects = {
+        select = {
+            enable = true,
+            lookahead = true,
+            keymaps = {
+                ['aa'] = '@parameter.outer',
+                ['ia'] = '@parameter.inner',
+                ['af'] = '@function.outer',
+                ['if'] = '@function.inner',
+                ['ac'] = '@class.outer',
+                ['ic'] = '@class.inner',
+                ['as'] = '@struct.outer',
+                ['is'] = '@struct.inner',
+                ['at'] = '@type.outer',
+                ['it'] = '@type.inner',
+            },
+        },
+    },
+}

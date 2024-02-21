@@ -1,0 +1,75 @@
+set $alt Mod1
+set $super Mod4
+set $ws_web "1:web"
+set $ws_term "2:term"
+set $ws_chat "3:chat"
+set $ws_misc "4:misc"
+
+font pango:monospace 9
+floating_modifier $alt
+default_border pixel 4
+hide_edge_borders smart
+workspace_auto_back_and_forth no
+
+exec --no-startup-id alacritty --class term -e tmux new -As 0
+exec --no-startup-id firefox
+exec --no-startup-id slack
+
+assign [class="firefox"] $ws_web
+assign [class="term"] $ws_term
+assign [class="Slack"] $ws_chat
+for_window [window_role="pop-up"] floating enable
+
+bindsym $alt+Return exec alacritty -e tmux new -As 0
+bindsym $super+Return exec firefox
+
+bindsym $alt+q kill
+bindsym $alt+shift+r restart
+bindsym $alt+f fullscreen toggle
+bindsym $alt+shift+f floating toggle
+bindsym $alt+t layout toggle tabbed split
+bindsym $alt+i resize grow width 10 px or 10 ppt
+bindsym $alt+shift+i resize shrink width 10 px or 10 ppt
+bindsym $alt+h focus left
+bindsym $alt+j focus down
+bindsym $alt+k focus up
+bindsym $alt+l focus right
+
+bindsym $alt+w workspace $ws_web
+bindsym $alt+e workspace $ws_term
+bindsym $alt+s workspace $ws_chat
+bindsym $alt+a workspace $ws_misc
+bindsym $alt+Shift+1 move container to workspace number $ws_web
+bindsym $alt+Shift+2 move container to workspace number $ws_term
+bindsym $alt+Shift+3 move container to workspace number $ws_chat
+bindsym $alt+Shift+4 move container to workspace number $ws_misc
+
+bindsym $alt+d exec --no-startup-id dmenu_run
+bindsym $alt+shift+x exec dunstctl close-all
+bindsym --release $alt+y exec --no-startup-id scrot -s $HOME'/captures/%F_%T_$wx$h.png' -e 'xclip -sel clip -target image/png -i $f'
+
+bindsym XF86MonBrightnessUp exec --no-startup-id doas brightnessctl set 10%+
+bindsym XF86MonBrightnessDown exec --no-startup-id doas brightnessctl set 10%-
+bindsym XF86AudioRaiseVolume exec --no-startup-id pulsemixer --change-volume +10
+bindsym XF86AudioLowerVolume exec --no-startup-id pulsemixer --change-volume -10
+bindsym XF86AudioMute exec --no-startup-id pulsemixer --toggle-mute
+
+set $powermenu "[L]OCK [E]XIT [S]USPEND [R]EBOOT [P]OWEROFF"
+mode $powermenu {
+        bindsym e exec --no-startup-id i3-msg exit, mode "default"
+        bindsym l exec --no-startup-id i3lock -c 282828 -u, mode "default"
+        bindsym s exec --no-startup-id i3lock -c 282828 -u | doas zzz, mode "default"
+        bindsym r exec --no-startup-id doas reboot, mode "default"
+        bindsym p exec --no-startup-id doas poweroff, mode "default"
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+        bindsym BackSpace mode "default"
+}
+bindsym $alt+BackSpace mode $powermenu
+
+bar {
+    status_command i3status
+    position bottom
+    mode hide
+    strip_workspace_numbers yes
+}

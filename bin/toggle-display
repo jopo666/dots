@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+if xrandr | grep "eDP-1 disconnected"; then
+    xrandr --output eDP-1 --auto
+else
+    xrandr --output eDP-1 --off
+fi

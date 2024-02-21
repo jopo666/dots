@@ -1,0 +1,9 @@
+setxkbmap us,fi
+setxkbmap -option ctrl:nocaps
+setxkbmap -option grp:alt_space_toggle
+xset r rate 250 100
+unclutter-xfixes &
+dunst &
+picom &
+
+i3
