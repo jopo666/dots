@@ -78,3 +78,8 @@ if [[ "$install_snap" == "y" ]]; then
     sudo snap install --classic firefox
 fi
 
+echo ">> Add user to groups? (y/n)"
+read -r add_user_to_groups
+if [[ "$add_user_to_groups" == "y" ]]; then
+    sudo usermod -a -G video "${USER}"
+fi

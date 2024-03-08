@@ -46,10 +46,10 @@ bindsym $alt+Shift+4 move container to workspace number $ws_misc
 
 bindsym $alt+d exec --no-startup-id dmenu_run
 bindsym $alt+shift+x exec dunstctl close-all
-bindsym --release $alt+y exec --no-startup-id scrot -s $HOME'/captures/%F_%T_$wx$h.png' -e 'xclip -sel clip -target image/png -i $f'
+bindsym --release $alt+y exec --no-startup-id scrot -s $HOME'/Pictures/%F_%T_$wx$h.png' -e 'xclip -sel clip -target image/png -i $f'
 
-bindsym XF86MonBrightnessUp exec --no-startup-id doas brightnessctl set 10%+
-bindsym XF86MonBrightnessDown exec --no-startup-id doas brightnessctl set 10%-
+bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set 10%+
+bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 10%-
 bindsym XF86AudioRaiseVolume exec --no-startup-id pulsemixer --change-volume +10
 bindsym XF86AudioLowerVolume exec --no-startup-id pulsemixer --change-volume -10
 bindsym XF86AudioMute exec --no-startup-id pulsemixer --toggle-mute
@@ -59,8 +59,8 @@ mode $powermenu {
         bindsym e exec --no-startup-id i3-msg exit, mode "default"
         bindsym l exec --no-startup-id i3lock -c 282828 -u, mode "default"
         bindsym s exec --no-startup-id i3lock -c 282828 -u | doas zzz, mode "default"
-        bindsym r exec --no-startup-id doas reboot, mode "default"
-        bindsym p exec --no-startup-id doas poweroff, mode "default"
+        bindsym r exec --no-startup-id reboot, mode "default"
+        bindsym p exec --no-startup-id poweroff, mode "default"
         bindsym Return mode "default"
         bindsym Escape mode "default"
         bindsym BackSpace mode "default"
@@ -70,6 +70,6 @@ bindsym $alt+BackSpace mode $powermenu
 bar {
     status_command i3status
     position bottom
-    mode hide
+    mode dock
     strip_workspace_numbers yes
 }
