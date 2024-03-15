@@ -23,7 +23,7 @@ background = "#282828"
 foreground = "#ebdbb2"
 
 [font]
-size = 12
+size = 9
 
 [font.normal]
 family = "BlexMono Nerd Font"

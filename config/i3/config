@@ -11,6 +11,12 @@ default_border pixel 4
 hide_edge_borders smart
 workspace_auto_back_and_forth no
 
+exec --no-startup-id dunst
+exec --no-startup-id unclutter-xfixes
+exec --no-startup-id picom
+exec --no-startup-id nm-applet
+exec --no-startup-id blueman-applet
+
 exec --no-startup-id alacritty --class term -e tmux new -As 0
 exec --no-startup-id firefox
 exec --no-startup-id slack
@@ -26,19 +32,20 @@ bindsym $super+Return exec firefox
 bindsym $alt+q kill
 bindsym $alt+shift+r restart
 bindsym $alt+f fullscreen toggle
-bindsym $alt+shift+f floating toggle
+bindsym $alt+s sticky toggle
 bindsym $alt+t layout toggle tabbed split
+bindsym $alt+shift+f floating toggle
 bindsym $alt+i resize grow width 10 px or 10 ppt
 bindsym $alt+shift+i resize shrink width 10 px or 10 ppt
-bindsym $alt+h focus left
-bindsym $alt+j focus down
-bindsym $alt+k focus up
-bindsym $alt+l focus right
+bindsym $alt+shift+h focus left
+bindsym $alt+shift+j focus down
+bindsym $alt+shift+k focus up
+bindsym $alt+shift+l focus right
 
 bindsym $alt+w workspace $ws_web
 bindsym $alt+e workspace $ws_term
-bindsym $alt+s workspace $ws_chat
-bindsym $alt+a workspace $ws_misc
+bindsym $alt+r workspace $ws_chat
+bindsym $alt+m workspace $ws_misc
 bindsym $alt+Shift+1 move container to workspace number $ws_web
 bindsym $alt+Shift+2 move container to workspace number $ws_term
 bindsym $alt+Shift+3 move container to workspace number $ws_chat

@@ -1,0 +1,2 @@
+setxkbmap -layout us,fi -option ctrl:nocaps
+xset r rate 250 100

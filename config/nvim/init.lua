@@ -29,6 +29,9 @@ vim.opt.termguicolors = true    -- 24-bit RGB colors
 vim.opt.undofile = true         -- persistent undo
 vim.cmd([[ colorscheme habamax ]])
 
+-- Does not load in lazy...
+vim.g.copilot_no_tab_map = true
+
 --- AUTOCOMMANDS ---
 -- remove trailing whitespace
 vim.cmd([[ au BufWritePre * :%s/\s\+$//e ]])
@@ -124,6 +127,7 @@ vim.keymap.set("n", "<leader>w", vim.diagnostic.setqflist, { desc = "Quickfix er
 vim.keymap.set("n", "<leader>%", 'ggVG"+y', { desc = "Yank file to clipboard" })
 vim.keymap.set("n", "<leader>s", grep_current_word, { desc = "Grep cword" })
 vim.keymap.set("n", "<leader>/", grep_user_input, { desc = "Grep input" })
+vim.keymap.set("n", "<leader>y", '"+y', { desc = "Yank to clipboard" })
 vim.keymap.set("x", "<leader>y", '"+y', { desc = "Yank to clipboard" })
 
 --- PLUGINS ---
@@ -149,6 +153,8 @@ require("lazy").setup({
     { "tpope/vim-repeat" },
     -- Better netrw
     { "tpope/vim-vinegar" },
+    -- Readline style keybindings
+    { "tpope/vim-rsi" },
     -- Additional text objects
     { "wellle/targets.vim" },
     -- Replace motion with register
@@ -157,6 +163,12 @@ require("lazy").setup({
     {
         "mbbill/undotree",
         keys = { { "<leader>u", "<cmd>UndotreeToggle<cr>" } },
+    },
+    -- Leap
+    {
+        'ggandor/leap.nvim',
+        opts = {},
+        keys = { { "<C-j>", "<Plug>(leap-forward)" }, { "<C-k>", "<Plug>(leap-backward)" } },
     },
     -- Zen mode
     {
@@ -193,11 +205,11 @@ require("lazy").setup({
     {
         "github/copilot.vim",
         config = function()
-            vim.g.copilot_no_tab_map = true
             vim.keymap.set("i", "<C-space>", 'copilot#Accept("\\<CR>")', {
                 expr = true,
                 replace_keycodes = false,
             })
+            vim.g.copilot_assume_mapped = true
         end,
     },
     -- Fuzzy searching
@@ -371,7 +383,7 @@ require("lazy").setup({
                     vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = event.buf })
                     vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, { buffer = event.buf })
                     vim.keymap.set("n", "<leader>a", vim.lsp.buf.code_action, { buffer = event.buf })
-                    vim.keymap.set({ "i", "n" }, "<c-k>", vim.lsp.buf.signature_help, { buffer = event.buf })
+                    vim.keymap.set({ "i", "n" }, "<c-h>", vim.lsp.buf.signature_help, { buffer = event.buf })
                 end,
             })
             -- Advertise nvim-cmp and luasnip capabilities
@@ -387,7 +399,7 @@ require("lazy").setup({
                 ["ruff-lsp"] = {
                     ["name"] = "ruff_lsp",
                     ["config"] = {
-                        on_attach = function(client, buffer)
+                        on_attach = function(client, _)
                             client.server_capabilities.hoverProvider = false
                         end,
                     },
@@ -546,9 +558,9 @@ require("lazy").setup({
             vim.keymap.set("n", "<leader>ds", function()
                 dapui.float_element("scopes")
             end, { desc = "Debug: Scope" })
-            -- dap.listeners.before.event_initialized["dapui_config"] = dapui.open
-            dap.listeners.before.event_terminated["dapui_config"] = dapui.close
-            dap.listeners.before.event_exited["dapui_config"] = dapui.close
+            dap.listeners.before.event_initialized["dapui_config"] = dapui.open
+            -- dap.listeners.before.event_terminated["dapui_config"] = dapui.close
+            -- dap.listeners.before.event_exited["dapui_config"] = dapui.close
         end,
     },
 }, {})

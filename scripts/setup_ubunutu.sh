@@ -13,6 +13,7 @@ if [[ "$install_deps" == "y" ]]; then
     sudo apt update -q && sudo apt upgrade -q
     sudo apt install -yq \
         brightnessctl \
+        blueman \
         build-essential \
         curl \
         dunst \
@@ -33,6 +34,7 @@ if [[ "$install_deps" == "y" ]]; then
         xclip \
         xinit
 
+    sudo chmod +s "$(which brightnessctl)"
     if ! command -v brew &> /dev/null; then
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         echo "Homebrew installed, please restart your terminal"
@@ -76,10 +78,4 @@ read -r install_snap
 if [[ "$install_snap" == "y" ]]; then
     sudo snap install --classic alacritty
     sudo snap install --classic firefox
-fi
-
-echo ">> Add user to groups? (y/n)"
-read -r add_user_to_groups
-if [[ "$add_user_to_groups" == "y" ]]; then
-    sudo usermod -a -G video "${USER}"
 fi
