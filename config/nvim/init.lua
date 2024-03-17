@@ -74,6 +74,8 @@ vim.keymap.set("i", "jk", "<esc>")
 -- too close to arrows
 vim.keymap.set({ "i", "n", "v" }, "<pageup>", "<nop>")
 vim.keymap.set({ "i", "n", "v" }, "<pagedown>", "<nop>")
+-- save one keystroke
+vim.keymap.set("n", ";", ":")
 -- don't jump to next
 vim.keymap.set("n", "*", "m`:keepjumps normal! *``<cr>")
 vim.keymap.set("n", "#", "m`:keepjumps normal! #``<cr>")
