@@ -6,26 +6,30 @@ if [[ ! -e scripts ]]; then
     exit 1
 fi
 
+if ! command -v brew &> /dev/null; then
+    echo ">> Homebrew not installed, install with the following command:"
+    echo /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    exit 1
+fi
 
 echo ">> Install dependencies? (y/n)"
 read -r install_deps
 if [[ "$install_deps" == "y" ]]; then
     sudo apt update -q && sudo apt upgrade -q
     sudo apt install -yq \
-        brightnessctl \
         blueman \
+        brightnessctl \
         build-essential \
         curl \
         dunst \
-        feh \
         git \
         i3 \
         i3lock \
         i3status \
+        libnotify-bin \
         network-manager \
         picom \
         pulseaudio \
-        libnotify-bin \
         pulsemixer \
         scrot \
         tar \
@@ -35,10 +39,6 @@ if [[ "$install_deps" == "y" ]]; then
         xinit
 
     sudo chmod +s "$(which brightnessctl)"
-    if ! command -v brew &> /dev/null; then
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        echo "Homebrew installed, please restart your terminal"
-    fi
 fi
 
 
