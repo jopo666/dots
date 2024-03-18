@@ -157,6 +157,8 @@ require("lazy").setup({
     { "tpope/vim-vinegar" },
     -- Readline style keybindings
     { "tpope/vim-rsi" },
+    -- Automatic tabwidth
+    { "tpope/vim-sleuth" },
     -- Additional text objects
     { "wellle/targets.vim" },
     -- Replace motion with register
@@ -222,7 +224,7 @@ require("lazy").setup({
             { "<c-p>",     "<cmd>Telescope find_files theme=dropdown previewer=false<cr>", desc = "Find files" },
             { "<c-n>",     "<cmd>Telescope buffers theme=dropdown previewer=false<cr>",    desc = "Find buffers" },
             { "<leader>/", "<cmd>Telescope live_grep<cr>",                                 desc = "Live grep" },
-            { "<leader>o", "<cmd>Telescope lsp_dynamic_workspace_symbols<cr>",             desc = "LSP symbols" },
+            { "<leader>s", "<cmd>Telescope lsp_dynamic_workspace_symbols<cr>",             desc = "LSP symbols" },
             { "<leader>?", "<cmd>Telescope keymaps<cr>",                                   desc = "Keymaps" },
         },
     },

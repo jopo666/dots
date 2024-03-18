@@ -76,6 +76,13 @@ bind "\C-n":history-search-forward
 bind "\C-k":forward-word
 bind "\C-j":backward-word
 
+# Menu completion (tab/shift+tab)
+bind '"\C-i":menu-complete'
+bind '"\e[Z":menu-complete-backward'
+
+bind "set show-all-if-ambiguous on"
+bind "set menu-complete-display-prefix on"
+
 # FZF
 if command -v fzf &> /dev/null; then
     if [ -d /home/linuxbrew ]; then
